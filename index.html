@@ -1120,6 +1120,26 @@ section.pledge { background: #FDFCFA; }
 .sigimg { position: absolute; left: 10px; bottom: 6px; height: 130px; width: auto; pointer-events: none; }
 .sigwrap.cleared .sigimg { display: none; }
 
+/* ---------- breaking news: Jensen is back (slide 2) ---------- */
+.newswrap { display: grid; grid-template-columns: 880px 1fr; gap: 56px; align-items: center; margin-top: 8px; }
+.newspic { position: relative; width: 880px; height: 496px; }
+.newspic img { display: block; width: 880px; height: 496px; object-fit: cover; border-radius: 24px; box-shadow: 0 10px 30px rgba(59, 67, 80, 0.18); }
+.nstamp { position: absolute; right: -36px; bottom: -30px; margin: 0; padding: 14px 30px; font-size: 48px; font-weight: 900; line-height: 1.15; text-align: center; color: #A4472F; background: rgba(253, 252, 250, 0.92); border: 7px solid #A4472F; border-radius: 18px; transform: rotate(-10deg); }
+.nstamp.fragment { opacity: 0; transform: rotate(-10deg) scale(2.4); transition: opacity 0.2s ease, transform 0.35s cubic-bezier(0.3, 1.5, 0.5, 1); }
+.nstamp.fragment.visible { opacity: 1; transform: rotate(-10deg) scale(1); }
+.newsside { display: flex; flex-direction: column; gap: 28px; }
+.ntime { background: var(--card); border-radius: 20px; padding: 28px 32px; display: flex; flex-direction: column; gap: 6px; }
+.nrow { display: grid; grid-template-columns: 120px 1fr; align-items: center; gap: 16px; }
+.nrow .d { font-family: 'Space Grotesk', Arial, sans-serif; font-size: 34px; font-weight: 700; color: var(--muted); margin: 0; }
+.nrow .t { font-size: 34px; color: var(--muted); margin: 0; }
+.nrow.now .d { color: var(--teal); }
+.nrow.now .t { font-size: 40px; font-weight: 700; color: var(--dark); }
+.nline { width: 4px; height: 34px; margin-left: 40px; background: var(--teal-m); border-radius: 2px; }
+.ntime .m { font-size: 28px; color: var(--muted); margin: 6px 0 0 136px; }
+.nquote { background: var(--orange-l); border-radius: 20px; padding: 26px 32px; display: flex; flex-direction: column; gap: 6px; }
+.nquote .t { font-size: 40px; font-weight: 700; color: #7A4428; margin: 0; }
+.nquote .m { font-size: 28px; color: #7A4428; margin: 0; text-align: right; }
+
 
 #liveBadge { position: fixed; top: calc(10px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); z-index: 35; display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--btn-bg); color: var(--btn-fg); border: 1px solid var(--btn-line); font: 500 14px 'Noto Sans TC', system-ui, sans-serif; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12); }
 #liveBadge .dot { width: 10px; height: 10px; border-radius: 50%; background: #B9B4AC; }
@@ -1171,6 +1191,35 @@ section.pledge { background: #FDFCFA; }
 <p class="tagline">Communication：從定義、模型，到團隊與跨文化</p>
 <div class="spacer"></div>
 <aside>大家好，今天報告組織管理第 8 章「溝通」。內容分成八個小節，最後用章前的 Jensen 個案來看怎麼用溝通化解衝突。</aside>
+</section>
+
+<section id="news">
+<p class="eyebrow">開講前插播一則快訊</p>
+<h2>黃仁勳回來了！</h2>
+<div class="newswrap">
+<div class="newspic rise" style="--i:0">
+<img src="img/3182b5a894af1d42cc40a4b9b128ac46.jpg" alt="黃仁勳站在窗邊花園前，張開雙手做出歡迎的手勢">
+<p class="nstamp fragment">董事會<br>一致通過</p>
+</div>
+<div class="newsside">
+<div class="ntime rise" style="--i:1">
+<div class="nrow"><p class="d">11/12</p><p class="t">請辭 NVIDIA 執行長</p></div>
+<div class="nline"></div>
+<div class="nrow now"><p class="d">11/23</p><p class="t">董事會一致通過復職</p></div>
+<p class="m">即刻恢復總裁、執行長與董事身分</p>
+</div>
+<div class="nquote rise" style="--i:2">
+<p class="t">「我等不及要回去工作了。」</p>
+<p class="m">── 黃仁勳</p>
+</div>
+</div>
+</div>
+<div class="spacer"></div>
+<div class="strip rise" style="--i:3">
+<p class="t">董事會的理由</p>
+<p class="m">滿意他的「坦誠」與領導能力 → 坦誠，正是今天要講的溝通</p>
+</div>
+<aside>正式開始前先插播一則快訊。等一下的個案主角就是黃仁勳，他 11 月 12 日請辭 NVIDIA 執行長，結果今天（11 月 23 日）董事會一致通過讓他復職，即刻恢復總裁、執行長和董事身分，暫代執行長的財務長 Colette Kress 回去當財務長。（按一下蓋上「董事會一致通過」的章。）他本人說：「我等不及要回去工作了。」董事會給的理由，是對他的坦誠態度和領導能力感到滿意。坦誠，剛好就是今天要講的溝通。（出處：FTNN 新聞網，2026 年 11 月 23 日，Yahoo 股市轉載）</aside>
 </section>
 
 <section id="case" class="alt">
