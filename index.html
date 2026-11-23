@@ -1047,6 +1047,59 @@ section.lift { background: #EFF2F4; }
 .pstat .sig { font-size: 26px; color: var(--on-dark); margin: 0; }
 .pstat.o { background: #7A4428; }
 .pstat.o .num { color: #F5E1D3; }
+.paper .pgrid { flex: 1; align-content: center; }
+.paper .pcard .b { font-size: 30px; line-height: 1.55; }
+.presrow { display: grid; grid-template-columns: 1fr 560px; gap: 32px; align-items: start; }
+.ptable { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 18px; overflow: hidden; font-size: 26px; font-variant-numeric: tabular-nums; }
+.ptable th { background: var(--dark); color: var(--on-dark); font-weight: 700; text-align: left; padding: 10px 18px; }
+.ptable td { padding: 8px 18px; border-bottom: 1px solid var(--teal-l); color: var(--ink); }
+.ptable tr.ns td { color: #9C5D3B; font-weight: 700; background: #FBF1EA; }
+.pstack { display: flex; flex-direction: column; gap: 18px; }
+.pstack .pcard { padding: 22px 26px; }
+.pstack .pcard .h { font-size: 30px; }
+.pstack .pcard .b { font-size: 27px; }
+
+/* stage 1: touch → pair up and ask each other questions */
+.drift { transition: left 1.2s ease, top 1.2s ease; }
+.icebreak { position: absolute; right: 24px; top: 20px; margin: 0; background: #4F7189; color: #FBF8F3; border-radius: 999px; padding: 8px 22px; font-size: 26px; font-weight: 700; }
+.icebreak.fragment { opacity: 0; transition: opacity 0.6s ease; }
+.icebreak.fragment.visible { opacity: 1; }
+.chat { position: absolute; margin: 0; padding: 8px 20px; border-radius: 22px; font-size: 28px; font-weight: 700; white-space: nowrap; display: none; opacity: 0; }
+.chat.q { background: #FDFCFA; border: 3px solid #8FAEC3; color: #4A5869; }
+.chat.a { background: #F5E1D3; border: 3px solid #E3B497; color: #7A4428; }
+.t1:has(.icebreak.visible) .chat { display: block; }
+.t1:has(.icebreak.visible) .chat.q { animation: chatQ 4s ease-in-out infinite both; }
+.t1:has(.icebreak.visible) .chat.a { animation: chatA 4s ease-in-out infinite both; }
+@keyframes chatQ { 0% { opacity: 0; transform: scale(0.7); } 8%, 42% { opacity: 1; transform: none; } 50%, 100% { opacity: 0; transform: none; } }
+@keyframes chatA { 0%, 46% { opacity: 0; transform: scale(0.7); } 54%, 90% { opacity: 1; transform: none; } 98%, 100% { opacity: 0; transform: none; } }
+.t1:has(.icebreak.visible) .qm, .t1:has(.icebreak.visible) .say { display: none; }
+.t1:has(.icebreak.visible) .drift { animation: nod 1.6s ease-in-out infinite; }
+.t1:has(.icebreak.visible) .drift .yj { transform: none; }
+.t1:has(.icebreak.visible) .drift.d1 .yj, .t1:has(.icebreak.visible) .drift.d3 .yj, .t1:has(.icebreak.visible) .drift.d5 .yj { transform: scaleX(-1); }
+.t1:has(.icebreak.visible) .drift.d0 { left: 120px !important; top: 150px !important; }
+.t1:has(.icebreak.visible) .drift.d1 { left: 290px !important; top: 150px !important; }
+.t1:has(.icebreak.visible) .drift.d2 { left: 720px !important; top: 110px !important; }
+.t1:has(.icebreak.visible) .drift.d3 { left: 890px !important; top: 110px !important; }
+.t1:has(.icebreak.visible) .drift.d4 { left: 390px !important; top: 430px !important; }
+.t1:has(.icebreak.visible) .drift.d5 { left: 560px !important; top: 430px !important; }
+/* stage 2: pinball collisions (script on the web version), touch → snow, everyone calms down */
+.t2 { transition: background 1.2s ease; }
+.t2.js .fight { display: none; }
+.pb { position: absolute; left: 0; top: 0; will-change: transform; }
+.pspark { position: absolute; width: 150px; height: 150px; margin: -75px 0 0 -75px; pointer-events: none; animation: pspark 0.7s ease-out both; }
+@keyframes pspark { 0% { opacity: 0; transform: scale(0.2) rotate(0deg); } 25% { opacity: 1; transform: scale(1.15) rotate(20deg); } 100% { opacity: 0; transform: scale(0.6) rotate(50deg); } }
+.pbang { position: absolute; margin: -60px 0 0 30px; font-size: 40px; font-weight: 900; color: #C0452A; pointer-events: none; animation: pbang 0.8s ease-out both; }
+@keyframes pbang { 0% { opacity: 0; transform: scale(0.6); } 25% { opacity: 1; transform: scale(1.15); } 100% { opacity: 0; transform: translateY(-30px); } }
+.snow { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.snow.fragment { opacity: 0; transition: opacity 1.2s ease; }
+.snow.fragment.visible { opacity: 1; }
+.snow i { position: absolute; top: -60px; color: #FFFFFF; font-style: normal; text-shadow: 0 0 4px #4F7189, 0 0 12px rgba(79, 113, 137, 0.8); animation: fall 6s linear infinite; }
+@keyframes fall { from { transform: translateY(0) rotate(0deg); } to { transform: translateY(820px) rotate(200deg); } }
+.calm { position: absolute; right: 24px; top: 20px; margin: 0; background: #4F7189; color: #FBF8F3; border-radius: 999px; padding: 8px 22px; font-size: 26px; font-weight: 700; }
+.t2:has(.snow.visible) { background: linear-gradient(160deg, #EEF5FA, #D3E3EF); }
+.t2:has(.snow.visible) .fl, .t2:has(.snow.visible) .fr { animation-play-state: paused; }
+.t2:has(.snow.visible) .spark, .t2:has(.snow.visible) .bang { display: none; }
+.t2:has(.snow.visible) .yj { filter: saturate(0.7) brightness(1.05); }
 
 
 #liveBadge { position: fixed; top: calc(10px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); z-index: 35; display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--btn-bg); color: var(--btn-fg); border: 1px solid var(--btn-line); font: 500 14px 'Noto Sans TC', system-ui, sans-serif; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12); }
@@ -1649,7 +1702,7 @@ section.lift { background: #EFF2F4; }
 <p class="lab o">領導者要做</p>
 <p class="m">破冰、溝通整合</p>
 </div>
-<div class="tbox t1" role="img" aria-label="形成期的動畫：彼此陌生、缺互信">
+<div class="tbox t1 touch" role="img" aria-label="形成期的動畫：彼此陌生、缺互信">
 <div class="drift d0" style="left:110px;top:70px"><img class="yj " style="" src="img/23c0288240b8cf04481611809d38de97.jpg" alt=""><p class="qm" style="animation-delay:0.00s">?</p></div>
 <div class="drift d1" style="left:470px;top:40px"><img class="yj " style="" src="img/23c0288240b8cf04481611809d38de97.jpg" alt=""><p class="qm" style="animation-delay:0.55s">?</p></div>
 <div class="drift d2" style="left:860px;top:90px"><img class="yj " style="" src="img/23c0288240b8cf04481611809d38de97.jpg" alt=""><p class="qm" style="animation-delay:1.10s">?</p></div>
@@ -1659,9 +1712,16 @@ section.lift { background: #EFF2F4; }
 <p class="say s0" style="left:330px;top:250px">嗨…？</p>
 <p class="say s1" style="left:760px;top:260px">你是誰？</p>
 <p class="say s2" style="left:470px;top:520px">……</p>
+<p class="icebreak fragment">破冰：兩兩一組互相認識</p>
+<p class="chat q" style="left:60px;top:76px;animation-delay:0s">你負責哪一塊？</p>
+<p class="chat a" style="left:250px;top:300px;animation-delay:0s">我做硬體！</p>
+<p class="chat q" style="left:660px;top:36px;animation-delay:1.3s">平常怎麼聯絡？</p>
+<p class="chat a" style="left:850px;top:258px;animation-delay:1.3s">開個 Line 群！</p>
+<p class="chat q" style="left:330px;top:356px;animation-delay:2.6s">你擅長什麼？</p>
+<p class="chat a" style="left:520px;top:578px;animation-delay:2.6s">我會寫程式！</p>
 </div>
 </div>
-<aside>第一期形成期：大家剛認識，彼此陌生、缺少互信，右邊每個人頭上都是問號。領導者要做的是破冰，讓大家開始溝通、整合起來。</aside>
+<aside>第一期形成期：大家剛認識，彼此陌生、缺少互信，右邊每個人頭上都是問號。領導者要做的是破冰，讓大家開始溝通、整合起來。網頁版把 Q 版小人拖進右邊的框（或按下一步），大家就會兩兩一組互相問問題。</aside>
 </section>
 
 <section id="stage2" class="alt">
@@ -1676,13 +1736,14 @@ section.lift { background: #EFF2F4; }
 <p class="lab o">領導者要做</p>
 <p class="m">化解衝突、防內鬥</p>
 </div>
-<div class="tbox t2" role="img" aria-label="風暴期的動畫：個性浮現、有摩擦">
+<div class="tbox t2 touch" role="img" aria-label="風暴期的動畫：個性浮現、有摩擦">
 <div class="fight" style="top:60px"><div class="fl" style="animation-delay:0s"><img class="yj " style="" src="img/23c0288240b8cf04481611809d38de97.jpg" alt=""></div><div class="fr" style="animation-delay:0s"><img class="yj " style="" src="img/23c0288240b8cf04481611809d38de97.jpg" alt=""></div><svg class="spark" style="animation-delay:0s" viewBox="0 0 200 200" aria-hidden="true"><polygon points="100,0 120,70 190,40 135,100 200,130 125,125 140,200 100,140 55,195 75,125 0,135 65,95 15,35 85,70" fill="#F2B544"/><polygon points="100,40 112,82 150,70 122,102 160,122 116,116 124,160 100,126 76,158 86,116 42,124 80,100 54,66 90,84" fill="#E4572E"/></svg><p class="bang" style="animation-delay:{delay}s">碰！</p></div>
 <div class="fight" style="top:250px"><div class="fl" style="animation-delay:0.8s"><img class="yj " style="" src="img/23c0288240b8cf04481611809d38de97.jpg" alt=""></div><div class="fr" style="animation-delay:0.8s"><img class="yj " style="" src="img/23c0288240b8cf04481611809d38de97.jpg" alt=""></div><svg class="spark" style="animation-delay:0.8s" viewBox="0 0 200 200" aria-hidden="true"><polygon points="100,0 120,70 190,40 135,100 200,130 125,125 140,200 100,140 55,195 75,125 0,135 65,95 15,35 85,70" fill="#F2B544"/><polygon points="100,40 112,82 150,70 122,102 160,122 116,116 124,160 100,126 76,158 86,116 42,124 80,100 54,66 90,84" fill="#E4572E"/></svg><p class="bang" style="animation-delay:{delay}s">碰！</p></div>
 <div class="fight" style="top:440px"><div class="fl" style="animation-delay:1.6s"><img class="yj " style="" src="img/23c0288240b8cf04481611809d38de97.jpg" alt=""></div><div class="fr" style="animation-delay:1.6s"><img class="yj " style="" src="img/23c0288240b8cf04481611809d38de97.jpg" alt=""></div><svg class="spark" style="animation-delay:1.6s" viewBox="0 0 200 200" aria-hidden="true"><polygon points="100,0 120,70 190,40 135,100 200,130 125,125 140,200 100,140 55,195 75,125 0,135 65,95 15,35 85,70" fill="#F2B544"/><polygon points="100,40 112,82 150,70 122,102 160,122 116,116 124,160 100,126 76,158 86,116 42,124 80,100 54,66 90,84" fill="#E4572E"/></svg><p class="bang" style="animation-delay:{delay}s">碰！</p></div>
+<div class="snow fragment"><i style="left:464px;font-size:37px;animation-duration:7.8s;animation-delay:-1.0s">❄</i><i style="left:89px;font-size:28px;animation-duration:4.5s;animation-delay:-6.5s">❄</i><i style="left:1037px;font-size:32px;animation-duration:5.6s;animation-delay:-0.2s">❄</i><i style="left:998px;font-size:40px;animation-duration:5.6s;animation-delay:-4.6s">❄</i><i style="left:824px;font-size:28px;animation-duration:5.9s;animation-delay:-6.1s">❄</i><i style="left:546px;font-size:42px;animation-duration:5.6s;animation-delay:-7.2s">❄</i><i style="left:776px;font-size:49px;animation-duration:4.5s;animation-delay:-2.1s">❄</i><i style="left:129px;font-size:38px;animation-duration:6.5s;animation-delay:-3.0s">❄</i><i style="left:118px;font-size:36px;animation-duration:4.9s;animation-delay:-0.7s">❄</i><i style="left:1058px;font-size:54px;animation-duration:4.8s;animation-delay:-6.5s">❄</i><i style="left:131px;font-size:43px;animation-duration:7.8s;animation-delay:-3.9s">❄</i><i style="left:397px;font-size:30px;animation-duration:7.8s;animation-delay:-4.6s">❄</i><i style="left:911px;font-size:35px;animation-duration:6.2s;animation-delay:-6.8s">❄</i><i style="left:872px;font-size:30px;animation-duration:4.6s;animation-delay:-4.8s">❄</i><i style="left:1089px;font-size:48px;animation-duration:5.3s;animation-delay:-2.9s">❄</i><i style="left:1013px;font-size:42px;animation-duration:6.5s;animation-delay:-2.5s">❄</i><i style="left:728px;font-size:42px;animation-duration:5.1s;animation-delay:-5.3s">❄</i><i style="left:1039px;font-size:48px;animation-duration:6.2s;animation-delay:-2.8s">❄</i><i style="left:24px;font-size:35px;animation-duration:5.4s;animation-delay:-2.1s">❄</i><i style="left:867px;font-size:34px;animation-duration:5.5s;animation-delay:-6.7s">❄</i><i style="left:853px;font-size:31px;animation-duration:6.6s;animation-delay:-0.9s">❄</i><i style="left:52px;font-size:32px;animation-duration:7.9s;animation-delay:-1.3s">❄</i><i style="left:238px;font-size:26px;animation-duration:7.2s;animation-delay:-3.0s">❄</i><i style="left:348px;font-size:44px;animation-duration:5.7s;animation-delay:-1.9s">❄</i><i style="left:839px;font-size:44px;animation-duration:5.8s;animation-delay:-3.3s">❄</i><i style="left:143px;font-size:35px;animation-duration:6.9s;animation-delay:-0.3s">❄</i><i style="left:218px;font-size:50px;animation-duration:6.1s;animation-delay:-2.9s">❄</i><i style="left:1034px;font-size:41px;animation-duration:6.8s;animation-delay:-7.8s">❄</i><i style="left:128px;font-size:32px;animation-duration:4.1s;animation-delay:-1.1s">❄</i><i style="left:791px;font-size:47px;animation-duration:6.3s;animation-delay:-6.0s">❄</i><i style="left:719px;font-size:36px;animation-duration:7.9s;animation-delay:-0.0s">❄</i><i style="left:1021px;font-size:32px;animation-duration:4.2s;animation-delay:-4.9s">❄</i><i style="left:352px;font-size:31px;animation-duration:5.4s;animation-delay:-3.4s">❄</i><i style="left:247px;font-size:28px;animation-duration:4.8s;animation-delay:-1.8s">❄</i><p class="calm">冷靜一下……</p></div>
 </div>
 </div>
-<aside>第二期風暴期：個性開始浮現，意見不合就會互相碰撞、擦出火花。領導者要化解衝突，避免變成內鬥。</aside>
+<aside>第二期風暴期：個性開始浮現，意見不合就會互相碰撞、擦出火花。領導者要化解衝突，避免變成內鬥。網頁版把 Q 版小人拖進右邊的框（或按下一步）就會下雪，大家冷靜下來。</aside>
 </section>
 
 <section id="stage3" class="alt">
@@ -1751,7 +1812,7 @@ section.lift { background: #EFF2F4; }
 </section>
 
 <section id="belbin1" class="alt">
-<h2>翻開卡牌：團隊裡的九種角色</h2>
+<h2>團隊裡的九種角色</h2>
 <div class="bdeck">
 <div class="bcard rise" style="--i:0">
 <div class="bback"><p class="q">?</p><p class="n">ROLE 01</p><p class="m">點我翻牌</p></div>
@@ -1838,7 +1899,7 @@ section.lift { background: #EFF2F4; }
 </section>
 
 <section id="belbin2" class="alt">
-<h2>翻開卡牌：團隊裡的九種角色</h2>
+<h2>團隊裡的九種角色</h2>
 <div class="bdeck">
 <div class="bcard rise" style="--i:0">
 <div class="bback"><p class="q">?</p><p class="n">ROLE 04</p><p class="m">點我翻牌</p></div>
@@ -1926,7 +1987,7 @@ section.lift { background: #EFF2F4; }
 </section>
 
 <section id="belbin3" class="alt">
-<h2>翻開卡牌：團隊裡的九種角色</h2>
+<h2>團隊裡的九種角色</h2>
 <div class="bdeck">
 <div class="bcard rise" style="--i:0">
 <div class="bback"><p class="q">?</p><p class="n">ROLE 07</p><p class="m">點我翻牌</p></div>
@@ -2255,62 +2316,85 @@ section.lift { background: #EFF2F4; }
 <p class="ptitle">導入聊天機器人輔助「諮商技巧」課程教學之效果研究</p>
 <div class="prow2"><p class="k">作者</p><p class="v">謝麗紅、陳亭妍、張瑋珊、劉嘉吉、鄧志平</p></div>
 <div class="prow2"><p class="k">單位</p><p class="v">國立彰化師範大學 輔導與諮商學系、物理學系</p></div>
-<div class="prow2"><p class="k">期刊</p><p class="v">教育心理學報（臺師大），2025，56 卷 3 期，681–708 頁</p></div>
-<div class="prow2"><p class="k">DOI</p><p class="v">10.6251/BEP.202503_56(3).0008</p></div>
-<div class="prow2"><p class="k">經費</p><p class="v">教育部 111 年教學實踐研究計畫（PED1120518）</p></div>
-<div class="prow2"><p class="k">關鍵詞</p><p class="v">聊天機器人、諮商技巧、人工智慧、標準化個案、課程教學</p></div>
+<div class="prow2"><p class="k">期刊</p><p class="v">《教育心理學報》，2025 年，56 卷 3 期，681–708 頁（臺師大教育心理與輔導學系出版）</p></div>
+<div class="prow2"><p class="k">類型</p><p class="v">大學課程的教學實踐研究：把 AI 放進一門真實的必修課，看學生學得怎麼樣</p></div>
 </div>
-<aside>這篇是我找的延伸期刊，跟今天的溝通主題有關：諮商技巧本質上就是溝通技巧。刊在臺師大的《教育心理學報》，屬於國內教育心理領域的重要期刊。</aside>
+<aside>這篇是我找的延伸期刊，跟今天的溝通主題有關：諮商技巧本質上就是溝通技巧。完整出處：謝麗紅、陳亭妍、張瑋珊、劉嘉吉、鄧志平（2025）。導入聊天機器人輔助「諮商技巧」課程教學之效果研究。教育心理學報，56(3)，681–708。https://doi.org/10.6251/BEP.202503_56(3).0008</aside>
 </section>
 
 <section id="paper2" class="alt paper">
-<h2>研究目的與設計</h2>
+<h2>研究背景與目的</h2>
 <div class="pgrid">
-<div class="pcard"><p class="h">研究目的</p><p class="b">讓 AI 聊天機器人扮演「模擬個案」，看它能不能幫大學生練好諮商技巧</p></div>
-<div class="pcard"><p class="h">研究設計</p><p class="b">單組前後測（前實驗設計）＋質性訪談的混合方法</p></div>
-<div class="pcard"><p class="h">研究對象</p><p class="b">中部某大學諮商系大三，必修「諮商技巧」<br><b class="big">35</b> 人（男：女 ≈ 1：3）</p></div>
-<div class="pcard"><p class="h">教學方式</p><p class="b">14 週、每週一個技巧：簡述語意、情感反映、同理心、探問、摘要、立即性、自我揭露、面質……</p></div>
-<div class="pcard o"><p class="h">聊天機器人</p><p class="b">作者團隊用國科會計畫自己開發，課後用文字或語音跟虛擬個案練習</p></div>
-<div class="pcard o"><p class="h">課堂搭配</p><p class="b">老師示範、同儕演練、寫逐字稿，機器人負責課後自主練習</p></div>
+<div class="pcard"><p class="h">為什麼要做？</p><p class="b">諮商技巧一定要「開口練」才學得會，但新手不能直接拿真的個案練習，會有倫理風險，也會讓學生很焦慮。</p></div>
+<div class="pcard"><p class="h">原本的做法</p><p class="b">醫學和社工常請真人扮演「標準化個案」，效果不錯，但又貴又耗時，一次也演不了太多種情況。</p></div>
+<div class="pcard o"><p class="h">研究目的</p><p class="b">改用 AI 聊天機器人扮演模擬個案，放進「諮商技巧」課程，看看學生的諮商能力和同理心有沒有進步。</p></div>
 </div>
-<aside>研究目的是看「導入聊天機器人」能不能輔助諮商技巧課。設計是單一班級、課前課後各測一次，再加上反思札記和焦點團體訪談，所以是量化加質性的混合方法。機器人是第一作者 110 到 111 年國科會計畫開發的模擬案主。</aside>
+<aside>研究背景：諮商員養成要大量練習，但新手直接面對真的個案有倫理問題。醫學教育常用真人扮演的標準化病人，但成本高、耗時、一次涵蓋的情況有限。所以作者想用聊天機器人當虛擬的標準化個案，降低練習成本，並檢驗它輔助課程教學的效果。</aside>
 </section>
 
 <section id="paper3" class="alt paper">
-<h2>怎麼測量？</h2>
-<div class="pgrid two">
-<div class="pcard"><p class="h">個別諮商能力評量表</p><p class="b">劉淑慧（1999）編製，8 個分量表<br>信度 α = .76 – .90</p></div>
-<div class="pcard"><p class="h">傑佛遜同理心量表</p><p class="b">Hojat 等人（2001）醫護版，改成諮商版<br>20 題、3 個分量表</p></div>
-<div class="pcard o"><p class="h">同理心反思札記</p><p class="b">練習過半時撰寫，由助教匿名收集</p></div>
-<div class="pcard o"><p class="h">焦點團體訪談</p><p class="b">期末後半結構訪談，交成績後才分析</p></div>
+<h2>研究設計與研究對象</h2>
+<div class="pgrid">
+<div class="pcard"><p class="h">研究設計</p><p class="b">「單組前後測」：同一班學生，上課前測一次、上完一學期再測一次，比較分數有沒有進步。</p></div>
+<div class="pcard"><p class="h">資料分析</p><p class="b">「混合方法」：量表分數做統計（量化），再加上學生的反思札記和訪談（質性），兩邊互相對照。</p></div>
+<div class="pcard o"><p class="h">研究對象</p><p class="b">中部某大學諮商系大三、修「諮商技巧」必修課的學生，共 <b class="big">35</b> 人，男女約 1：3。這是他們第一次上實務課。</p></div>
 </div>
-<p class="pnote">分析：前後測用成對樣本 t 檢定（SPSS）；質性資料用 Hycner（1985）現象學內容分析</p>
-<aside>量化工具有兩個量表，質性有反思札記和焦點團體。值得一提的研究倫理設計：訪談由助理進行、匿名，而且老師交出成績之後才分析資料，避免影響學生。</aside>
+<aside>研究架構是 t1 → X → t2、t3：t1 是課前測驗，X 是一學期的課程，t2 是課後測驗，t3 是課後的反思札記和焦點訪談。因為只有一個班、沒有對照組，屬於「前實驗設計」。學生之前修過諮商理論與技術，這門課是第一次正式跟同儕、跟機器人一對一晤談。</aside>
 </section>
 
 <section id="paper4" class="alt paper">
-<h2>研究結果</h2>
-<div class="pres">
-<div class="pstat"><p class="lab">個別諮商能力總分</p><p class="num">89.4 → 101.9</p><p class="sig">t = 6.65，p < .001</p></div>
-<div class="pstat"><p class="lab">練習次數 × 課程成績</p><p class="num">r = .435</p><p class="sig">練越多次，成績越好（p < .05）</p></div>
-<div class="pstat o"><p class="lab">同理心量表總分</p><p class="num">119.4 → 118.1</p><p class="sig">沒有顯著變化；「情感關懷」反而下降</p></div>
+<h2>課程怎麼上？</h2>
+<div class="pgrid">
+<div class="pcard"><p class="h">教學內容</p><p class="b">共 14 週，每週練一個技巧：簡述語意、情感反映、同理心、場面構成、探問、摘要、立即性、自我揭露、面質、綜合練習。</p></div>
+<div class="pcard o"><p class="h">聊天機器人</p><p class="b">作者團隊自己開發。學生點開網站，先看個案背景，再用說話或打字跟虛擬個案晤談，畫面會提示目標並即時回饋。</p></div>
+<div class="pcard"><p class="h">課堂搭配</p><p class="b">上半堂老師用上週的錄音和逐字稿示範新技巧；下半堂學生上台或分組演練，錄音、共編逐字稿再討論。</p></div>
 </div>
-<div class="pgrid two">
-<div class="pcard"><p class="h">進步的能力</p><p class="b">8 個分量表中 7 個顯著進步，只有「人格傾向」沒有</p></div>
-<div class="pcard"><p class="h">學生怎麼說</p><p class="b">練習成本變低、比較不焦慮、不怕傷到真的個案、更想自己練</p></div>
-</div>
-<aside>量化結果：個別諮商能力總分顯著進步，八個分量表中有七個顯著，只有人格傾向沒有。但同理心量表沒有進步，情感關懷甚至下降，作者認為值得再探討，可能是兩個量表測的東西不同。練習次數和成績有中度正相關。質性分析歸納出四大主題：課程多元設計、提升自主學習意願、機器人的優勢與挑戰，以及整體回饋。</aside>
+<aside>機器人個案的議題以一般身心困擾、課業壓力、生涯轉換、人際關係為主，沒有精神疾患；年齡從學生熟悉的青少年慢慢擴展到社會人士。每個單元會先說明技巧的定義、重點、示範例句和評分標準，學生照系統步驟練習。課堂和機器人分工：課堂重情境與同儕互動，機器人負責課後的自主練習。</aside>
 </section>
 
 <section id="paper5" class="alt paper">
-<h2>研究限制與我的觀察</h2>
+<h2>用什麼測量？</h2>
 <div class="pgrid two">
-<div class="pcard"><p class="h">作者自己說的限制</p><p class="b">機器人要搭配其他教學一起用，不能取代傳統的諮商師訓練</p></div>
-<div class="pcard"><p class="h">作者的建議</p><p class="b">語料庫再豐富、外表更像青少年個案，並推廣到不同階段的諮商員</p></div>
-<div class="pcard o"><p class="h">我的觀察：設計</p><p class="b">只有一班、沒有對照組，進步不一定全是機器人的功勞</p></div>
-<div class="pcard o"><p class="h">連回本章「溝通」</p><p class="b">簡述語意、情感反映就是「解碼＋回饋」；AI 是一個不怕犯錯的練習對象</p></div>
+<div class="pcard"><p class="h">個別諮商能力評量表</p><p class="b">量表（問卷），上課前後各填一次。共 8 個分量表，例如專業行為、深層互動、基本溝通、理論基礎；信度 α = .76–.90。</p></div>
+<div class="pcard"><p class="h">傑佛遜同理心量表</p><p class="b">量表（問卷），前後各填一次。原本是醫護人員版，作者改成諮商版；20 題，分成觀點取替、情感關懷、設身處地 3 個分量表。</p></div>
+<div class="pcard o"><p class="h">同理心反思札記</p><p class="b">練習次數過半時，學生寫下這段時間的改變與覺察；由助教匿名收集，老師不經手。</p></div>
+<div class="pcard o"><p class="h">焦點團體訪談</p><p class="b">期末後由研究助理做半結構訪談，問學習經驗和建議；老師交出成績後才開始分析，避免影響學生。</p></div>
+</div><p class="pnote">量化：成對樣本 t 檢定（SPSS）比較前後測　｜　質性：Hycner（1985）現象學內容分析</p>
+<aside>前兩個是量表，也就是問卷，課前、課後各填一次再比較分數。個別諮商能力評量表是劉淑慧編製（論文內文一處寫 1999，一處寫與王沂釗 1995）。傑佛遜同理心量表是 Hojat 等人（2001）的版本。這篇論文沒有寫是誰填、幾點計分；傑佛遜量表原版是受試者自己填的 7 點量表。後兩個是質性資料。</aside>
+</section>
+
+<section id="paper6" class="alt paper">
+<h2>量化結果：能力進步了，同理心卻沒有</h2>
+<div class="presrow"><table class="ptable"><thead><tr><th>個別諮商能力</th><th>前測</th><th>後測</th><th>t</th><th>結果</th></tr></thead><tbody><tr><td>總分</td><td>89.36</td><td>101.89</td><td>6.65</td><td>顯著進步 ***</td></tr><tr><td>過程技能</td><td>31.14</td><td>37.66</td><td>7.61</td><td>顯著進步 ***</td></tr><tr><td>深層互動</td><td>9.14</td><td>11.74</td><td>8.46</td><td>顯著進步 ***</td></tr><tr><td>訊息互動</td><td>10.33</td><td>12.36</td><td>5.58</td><td>顯著進步 ***</td></tr><tr><td>基本溝通</td><td>11.67</td><td>13.56</td><td>5.84</td><td>顯著進步 ***</td></tr><tr><td>概念形成技能</td><td>10.01</td><td>12.16</td><td>6.81</td><td>顯著進步 ***</td></tr><tr><td>專業行為</td><td>11.99</td><td>13.03</td><td>3.53</td><td>顯著進步 *</td></tr><tr><td>理論基礎</td><td>11.27</td><td>12.43</td><td>2.96</td><td>顯著進步 *</td></tr><tr><td>個人化技能</td><td>11.79</td><td>12.74</td><td>2.92</td><td>顯著進步 *</td></tr><tr class="ns"><td>人格傾向</td><td>13.16</td><td>13.87</td><td>1.91</td><td>未顯著</td></tr></tbody></table><div class="pstack">
+<div class="pcard"><p class="h">諮商能力</p><p class="b">總分從 89 進步到 102，8 個分量表中有 7 個顯著進步，只有「人格傾向」沒有。</p></div>
+<div class="pcard o"><p class="h">同理心量表</p><p class="b">總分 119 → 118，沒有顯著差異；「情感關懷」甚至顯著下降，作者認為值得再探討。</p></div>
+<div class="pcard"><p class="h">練習次數</p><p class="b">課後跟機器人練越多次，期末成績越高（r = .435，p < .05）。</p></div>
+</div></div>
+<aside>表格是個別諮商能力評量表的前後測，*** 代表 p < .001，* 代表 p < .05。注意兩份同理心測量結果不一致：評量表裡的同理心向度有進步，但傑佛遜同理心量表沒有，情感關懷還下降（50.20 → 48.34）。可能是兩份量表測的東西不一樣，或者學生學了技巧之後，對自己的同理心評得更嚴格。練習次數最少 2 次、最多 14 次，平均 8.5 次。</aside>
+</section>
+
+<section id="paper7" class="alt paper">
+<h2>質性結果：學生怎麼說？</h2>
+<div class="pgrid">
+<div class="pcard"><p class="h">優勢①　適合新手</p><p class="b">機器人不評價、不批判，沒有同學在看，新手比較敢開口；完成目標會有成就感，「有點像玩遊戲」。</p></div>
+<div class="pcard"><p class="h">優勢②　有步驟引導</p><p class="b">每個技巧都有說明、示範句和提示，學生知道一場諮商的架構，練起來不迷惘。</p></div>
+<div class="pcard"><p class="h">優勢③　個案很豐富</p><p class="b">每週換不同議題的個案，學生期待「這週個案發生什麼事」。</p></div>
+<div class="pcard o"><p class="h">挑戰①　不夠有彈性</p><p class="b">有時像在猜關鍵字，「一句話只能達成一個目標」，少了跟個案同在的感覺。</p></div>
+<div class="pcard o"><p class="h">挑戰②　表情場景單一</p><p class="b">個案表情變化少、場景重複，很難從表情讀出非語言線索。</p></div>
+<div class="pcard o"><p class="h">挑戰③　辨識不靈敏</p><p class="b">意思一樣但換個說法就判定不過，語音偵測也還不夠準。</p></div>
 </div>
-<aside>左邊是作者自己寫的限制和建議；右邊橘色的是我讀完的看法：單組前後測沒有對照組，所以進步可能也來自老師的教學或同儕演練。最後連回今天的主題：諮商技巧其實就是溝通模型裡的解碼和回饋，AI 讓學生可以先在安全的環境練習溝通。</aside>
+<aside>研究團隊把反思札記和訪談歸納成十個類別，再收斂成四大主題：課程多元設計的影響、機器人提升自主學習意願、機器人的優勢與挑戰、對整體課程的回饋。這頁列的是學生最常提到的三個優勢和三個挑戰。</aside>
+</section>
+
+<section id="paper8" class="alt paper">
+<h2>研究限制、建議與我的看法</h2>
+<div class="pgrid two">
+<div class="pcard"><p class="h">作者的限制</p><p class="b">聊天機器人一定要搭配其他教學方法，不能單獨取代傳統的諮商員訓練。</p></div>
+<div class="pcard"><p class="h">作者的建議</p><p class="b">語料庫再擴充、外表更像青少年個案、場景更像諮商室；也可以推廣到不同階段的諮商員。</p></div>
+<div class="pcard o"><p class="h">我的觀察</p><p class="b">只有一個班、沒有對照組，進步也可能來自老師教學或同儕演練，不一定全是機器人的功勞。</p></div>
+<div class="pcard o"><p class="h">連回本章「溝通」</p><p class="b">簡述語意、情感反映，就是溝通模型裡的「解碼」和「回饋」；AI 提供一個不怕犯錯的練習對象。</p></div>
+</div>
+<aside>左邊兩張是作者自己寫的限制和建議；右邊橘色兩張是我讀完的看法。最後連回今天的主題：諮商技巧其實就是溝通模型裡的解碼和回饋，AI 讓學生可以先在安全的環境練習溝通，再面對真人。</aside>
 </section>
 
 <section id="thanks" class="dark" style="justify-content:center">
@@ -2441,6 +2525,7 @@ section.lift { background: #EFF2F4; }
   function closeZoom() { var was = zoomEl._slip; zoomEl.hidden = true; zoomEl._slip = null; if (was && window.DECK && DECK.onZoomClose) DECK.onZoomClose(was); }
   function go(n, dir, quiet) {
     n = Math.max(0, Math.min(slides.length - 1, n));
+    stopPinball();
     closeZoom();
     slides[cur].classList.remove('active');
     cur = n;
@@ -2450,8 +2535,60 @@ section.lift { background: #EFF2F4; }
     if (quiet) return;
     entered();
   }
+  // ---- storming stage: the faces bounce around like pinballs until it snows ----
+  var pin = null;
+  function stopPinball() {
+    if (!pin) return;
+    cancelAnimationFrame(pin.raf);
+    pin.box.classList.remove('js');
+    pin.balls.forEach(function (o) { o.el.parentNode && o.el.parentNode.removeChild(o.el); });
+    pin = null;
+  }
+  function startPinball(sec) {
+    var box = sec.querySelector('.tbox.t2'), src = box && box.querySelector('.yj'), spark = box && box.querySelector('.spark');
+    if (!src) return;
+    box.classList.add('js');
+    var W = box.offsetWidth, H = box.offsetHeight, R = 65, balls = [], snow = box.querySelector('.snow');
+    for (var i = 0; i < 6; i++) {
+      var el = src.cloneNode(); el.classList.add('pb'); box.insertBefore(el, snow);
+      var ang = Math.random() * Math.PI * 2, sp = 6 + Math.random() * 3;
+      balls.push({ el: el, x: R + 20 + (i % 3) * (W - 2 * R - 40) / 2, y: R + 20 + Math.floor(i / 3) * (H - 2 * R - 40), vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, rot: 0 });
+    }
+    var p = pin = { box: box, balls: balls, raf: 0, last: 0 };
+    function burst(x, y) {
+      var now = Date.now(); if (now - p.last < 120) return; p.last = now;
+      var d = document.createElement('div'); d.className = 'pspark'; d.style.left = x + 'px'; d.style.top = y + 'px';
+      if (spark) { var s = spark.cloneNode(true); s.removeAttribute('class'); s.removeAttribute('style'); s.setAttribute('width', '150'); s.setAttribute('height', '150'); d.appendChild(s); }
+      box.appendChild(d); setTimeout(function () { d.parentNode && d.parentNode.removeChild(d); }, 750);
+      if (Math.random() < 0.45) { var t = document.createElement('p'); t.className = 'pbang'; t.textContent = ['碰！', '吵什麼！', '你錯了！', '聽我的！'][Math.floor(Math.random() * 4)]; t.style.left = x + 'px'; t.style.top = y + 'px'; box.appendChild(t); setTimeout(function () { t.parentNode && t.parentNode.removeChild(t); }, 850); }
+    }
+    function step() {
+      if (pin !== p) return;
+      var calm = snow && snow.classList.contains('visible');
+      W = box.offsetWidth; H = box.offsetHeight;
+      balls.forEach(function (o) {
+        if (calm) { var v = Math.hypot(o.vx, o.vy); if (v > 0.7) { o.vx *= 0.965; o.vy *= 0.965; } }
+        o.x += o.vx; o.y += o.vy; o.rot += o.vx * (calm ? 0.2 : 0.9);
+        if (o.x < R) { o.x = R; o.vx = Math.abs(o.vx); } else if (o.x > W - R) { o.x = W - R; o.vx = -Math.abs(o.vx); }
+        if (o.y < R) { o.y = R; o.vy = Math.abs(o.vy); } else if (o.y > H - R) { o.y = H - R; o.vy = -Math.abs(o.vy); }
+      });
+      for (var i = 0; i < balls.length; i++) for (var j = i + 1; j < balls.length; j++) {
+        var a = balls[i], c = balls[j], dx = c.x - a.x, dy = c.y - a.y, d = Math.hypot(dx, dy);
+        if (d > 0 && d < 2 * R) {
+          var nx = dx / d, ny = dy / d, rel = (a.vx - c.vx) * nx + (a.vy - c.vy) * ny, over = (2 * R - d) / 2;
+          a.x -= nx * over; a.y -= ny * over; c.x += nx * over; c.y += ny * over;
+          if (rel > 0) { a.vx -= rel * nx; a.vy -= rel * ny; c.vx += rel * nx; c.vy += rel * ny; if (!calm) burst((a.x + c.x) / 2, (a.y + c.y) / 2); }
+        }
+      }
+      balls.forEach(function (o) { o.el.style.transform = 'translate(' + (o.x - R) + 'px,' + (o.y - R) + 'px) rotate(' + o.rot + 'deg)'; });
+      p.raf = requestAnimationFrame(step);
+    }
+    step();
+  }
   function entered() {
     var sec = slides[cur];
+    stopPinball();
+    if (sec.id === 'stage2') startPinball(sec);
     Array.prototype.forEach.call(sec.querySelectorAll('.opt'), function (o) { o.classList.toggle('picked', classPick[sec.id] === o.getAttribute('data-k')); });
     if (window.DECK && DECK.onEnter) DECK.onEnter(sec);
     if (sec.id === 'elevend') showClassPath();
@@ -2881,7 +3018,7 @@ section.lift { background: #EFF2F4; }
     document.getElementById('lobStart').textContent = started ? '暫停（回到等待畫面）' : '開始遊戲';
     setStatus(connected ? (started ? '遊戲進行中：同學的手機會跟著你的投影片出題。' : '等大家加入後，按「開始遊戲」。') : '正在連線到即時伺服器…（一直連不上請換手機熱點）');
     if (!isPublic()) setStatus('注意：你開的不是公開網址。手機掃 QR 會連到公開網站，請用 ' + PUBLIC + ' 開簡報，才能收到大家的投票。');
-    else if (connected) document.getElementById('lobStatus').textContent += '（已連上 ' + liveClients().length + ' / ' + BROKERS.length + ' 台伺服器）';
+    else if (connected) document.getElementById('lobStatus').textContent += '（連線正常）';
   }
   function drawQR() {
     var box = document.getElementById('lobQR'); box.innerHTML = '';
@@ -2982,15 +3119,15 @@ section.lift { background: #EFF2F4; }
 
   var INTERACTIVE = /^(elev[123]|media|tactics)$/;
   function nextChip() {
-    var sec = D.current(); if (!sec || sec.id !== 'media' || !started || !connected) return;
+    var sec = D.current(); if (!sec || sec.id !== 'media' || !started || !connected || (q && q.status === 'open')) return false;
     var chip = Array.prototype.filter.call(sec.querySelectorAll('.fly.fragment, .vfly.fragment'), function (c) { return !c.classList.contains('visible'); })[0];
-    if (chip) D.onChip(chip);
+    if (chip) { D.onChip(chip); return true; }
+    return false;
   }
   D.onEnter = function (sec) {
     if (q && q.status === 'open') { closeQ(); markMajor(); }
     q = null; pendingChip = null; hidePoll(); clearInterval(ticker);
     if (!started && connected && count() > 0 && INTERACTIVE.test(sec.id)) { started = true; save(); render(); }
-    if (started && sec.id === 'media') setTimeout(nextChip, 900);
     if (started && /^elev[123]$/.test(sec.id)) openQ(elevQ(sec)); else publishState();
     if (sec.id === 'elevend') D.fillResults(resultsText());
     if (sec.id === 'elevator') openLobby();
@@ -2998,6 +3135,8 @@ section.lift { background: #EFF2F4; }
   // pressing "next" while a vote is open first closes the vote
   D.onBeforeNext = function (sec) {
     if (q && q.status === 'open' && (q.kind === 'elev' || q.kind === 'media')) { finishQ(); return true; }
+    if (sec.id === 'media' && started && connected && !q) return nextChip();
+    if (sec.id === 'media' && started && connected && q && q.status === 'closed') { q = null; return nextChip(); }
     return false;
   };
   D.onChip = function (fly) {
