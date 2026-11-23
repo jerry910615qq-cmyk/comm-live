@@ -1101,6 +1101,23 @@ section.lift { background: #EFF2F4; }
 .t2:has(.snow.visible) .spark, .t2:has(.snow.visible) .bang { display: none; }
 .t2:has(.snow.visible) .yj { filter: saturate(0.7) brightness(1.05); }
 
+/* ---------- academic-integrity pledge (last slide) ---------- */
+section.pledge { background: #FDFCFA; }
+.pledge h2 { font-size: 72px; }
+.pltext { display: flex; flex-direction: column; gap: 28px; max-width: 1560px; }
+.pl { font-size: 40px; line-height: 1.6; color: var(--ink); margin: 0; display: grid; grid-template-columns: 48px 1fr; }
+.pl b { color: var(--teal); }
+.psign { margin-top: auto; display: flex; flex-direction: row; align-items: flex-end; gap: 64px; }
+.sigbox, .datebox { display: flex; flex-direction: row; align-items: flex-end; gap: 12px; }
+.psign .k { font-size: 40px; font-weight: 700; color: var(--dark); margin: 0 0 12px; white-space: nowrap; }
+.sigwrap { position: relative; width: 720px; height: 140px; border-bottom: 4px solid var(--dark); }
+.sigpad { display: block; width: 720px; height: 140px; touch-action: none; cursor: crosshair; }
+.sigclear { position: absolute; right: 0; top: -44px; font: 500 24px 'Noto Sans TC', sans-serif; color: var(--muted); background: transparent; border: 2px solid var(--line); border-radius: 10px; padding: 2px 14px; cursor: pointer; }
+.datebox input { width: 110px; font: 500 40px 'Noto Sans TC', sans-serif; color: var(--ink); text-align: center; background: transparent; border: 0; border-bottom: 4px solid var(--dark); padding: 4px 0; margin-bottom: 8px; }
+.datebox input.dy { width: 130px; }
+.datebox input:focus-visible { outline: 3px solid var(--teal-m); outline-offset: 2px; }
+.datebox span { font-size: 40px; color: var(--ink); margin: 0 4px 12px; }
+
 
 #liveBadge { position: fixed; top: calc(10px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); z-index: 35; display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--btn-bg); color: var(--btn-fg); border: 1px solid var(--btn-line); font: 500 14px 'Noto Sans TC', system-ui, sans-serif; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12); }
 #liveBadge .dot { width: 10px; height: 10px; border-radius: 50%; background: #B9B4AC; }
@@ -2405,6 +2422,19 @@ section.lift { background: #EFF2F4; }
 <aside>謝謝大家，歡迎提問。</aside>
 </section>
 
+<section id="pledge" class="pledge">
+<h2>【學術誠信與 AI 使用切結聲明】</h2>
+<div class="pltext">
+<p class="pl"><b>1.</b>本人承諾在撰寫本報告及作業過程中，嚴格恪守國立臺北科技大學學術誠信守則。</p>
+<p class="pl"><b>2.</b>報告及作業中主要應用 AI 模型：Claude Opus 5.5（Anthropic），Q 版人物圖像以 ChatGPT（OpenAI）生成。AI 協助整理課本內容、查證文獻、製作投影片與互動網頁，所使用之對話紀錄均完整保留，可供查核；報告中之論述、引用文獻與最終內容，皆經本人閱讀、審核與修改，並由本人負責。</p>
+</div>
+<div class="psign">
+<div class="sigbox"><p class="k">學生簽名：</p><div class="sigwrap"><canvas class="sigpad" width="720" height="140" aria-label="簽名區"></canvas><button class="sigclear" type="button">清除</button></div></div>
+<div class="datebox"><p class="k">日期：</p><input class="dy" aria-label="民國年" inputmode="numeric" maxlength="3"><span>年</span><input class="dm" aria-label="月" inputmode="numeric" maxlength="2"><span>月</span><input class="dd" aria-label="日" inputmode="numeric" maxlength="2"><span>日</span></div>
+</div>
+<aside>報告最後附上學術誠信與 AI 使用切結聲明。網頁版可以直接用滑鼠或觸控筆在簽名框簽名，日期欄可以自己填；PPT 版請列印後手寫。</aside>
+</section>
+
 <div id="buddy" role="img" aria-label="Q 版黃仁勳：可以拖著他去碰卡片，往右拖到底會翻下一頁"><div class="bd"><img class="p-idle" src="img/buddy.png" alt="" draggable="false"><img class="p-kick" src="img/kick.png" alt="" draggable="false"><img class="p-run" src="img/run.png" alt="" draggable="false"></div><p class="kfx">踢飛！</p></div>
 <div id="zoom" hidden>
 <div class="zc" role="dialog" aria-label="投票：這句話是誰說的">
@@ -2731,7 +2761,7 @@ section.lift { background: #EFF2F4; }
     return false;
   }
   deckEl.addEventListener('click', function (e) {
-    if (e.target.closest('#zoom, #buddy, #poll')) return;
+    if (e.target.closest('#zoom, #buddy, #poll, .psign')) return;
     var t = e.target.closest(TOUCH);
     if (t && activate(t, false)) return;
     next();
@@ -2828,6 +2858,25 @@ section.lift { background: #EFF2F4; }
   buddy.addEventListener('pointerup', endDrag);
   buddy.addEventListener('pointercancel', endDrag);
   buddy.addEventListener('click', function (e) { e.stopPropagation(); });
+
+  // ---- signature pad on the pledge slide (kept in this browser) ----
+  Array.prototype.forEach.call(document.querySelectorAll('.sigpad'), function (cv) {
+    var ctx = cv.getContext('2d'), drawing = false, last = null;
+    ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#2B3440';
+    try { var saved = localStorage.getItem('pledgeSig'); if (saved) { var im = new Image(); im.onload = function () { ctx.drawImage(im, 0, 0); }; im.src = saved; } } catch (e) {}
+    function pt(e) { var r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) * cv.width / r.width, y: (e.clientY - r.top) * cv.height / r.height }; }
+    cv.addEventListener('pointerdown', function (e) { e.preventDefault(); e.stopPropagation(); drawing = true; last = pt(e); try { cv.setPointerCapture(e.pointerId); } catch (err) {} });
+    cv.addEventListener('pointermove', function (e) { if (!drawing) return; var p = pt(e); ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke(); last = p; });
+    function done() { if (!drawing) return; drawing = false; try { localStorage.setItem('pledgeSig', cv.toDataURL()); } catch (e) {} }
+    cv.addEventListener('pointerup', done); cv.addEventListener('pointercancel', done);
+    var clr = cv.parentNode.querySelector('.sigclear');
+    if (clr) clr.addEventListener('click', function (e) { e.stopPropagation(); ctx.clearRect(0, 0, cv.width, cv.height); try { localStorage.removeItem('pledgeSig'); } catch (err) {} });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.datebox input'), function (inp) {
+    var k = 'pledgeDate_' + inp.className;
+    try { inp.value = localStorage.getItem(k) || ''; } catch (e) {}
+    inp.addEventListener('input', function () { inp.value = inp.value.replace(/\D/g, ''); try { localStorage.setItem(k, inp.value); } catch (e) {} });
+  });
 
   // ---- progress bar ----
   scrubEl.max = slides.length;
