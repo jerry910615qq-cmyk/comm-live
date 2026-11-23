@@ -1117,6 +1117,8 @@ section.pledge { background: #FDFCFA; }
 .datebox input.dy { width: 130px; }
 .datebox input:focus-visible { outline: 3px solid var(--teal-m); outline-offset: 2px; }
 .datebox span { font-size: 40px; color: var(--ink); margin: 0 4px 12px; }
+.sigimg { position: absolute; left: 10px; bottom: 6px; height: 130px; width: auto; pointer-events: none; }
+.sigwrap.cleared .sigimg { display: none; }
 
 
 #liveBadge { position: fixed; top: calc(10px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); z-index: 35; display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--btn-bg); color: var(--btn-fg); border: 1px solid var(--btn-line); font: 500 14px 'Noto Sans TC', system-ui, sans-serif; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12); }
@@ -2429,10 +2431,10 @@ section.pledge { background: #FDFCFA; }
 <p class="pl"><b>2.</b>報告及作業中主要應用 AI 模型：Claude Opus 5.5（Anthropic），Q 版人物圖像以 ChatGPT（OpenAI）生成。AI 協助整理課本內容、查證文獻、製作投影片與互動網頁，所使用之對話紀錄均完整保留，可供查核；報告中之論述、引用文獻與最終內容，皆經本人閱讀、審核與修改，並由本人負責。</p>
 </div>
 <div class="psign">
-<div class="sigbox"><p class="k">學生簽名：</p><div class="sigwrap"><canvas class="sigpad" width="720" height="140" aria-label="簽名區"></canvas><button class="sigclear" type="button">清除</button></div></div>
-<div class="datebox"><p class="k">日期：</p><input class="dy" aria-label="民國年" inputmode="numeric" maxlength="3"><span>年</span><input class="dm" aria-label="月" inputmode="numeric" maxlength="2"><span>月</span><input class="dd" aria-label="日" inputmode="numeric" maxlength="2"><span>日</span></div>
+<div class="sigbox"><p class="k">學生簽名：</p><div class="sigwrap"><img class="sigimg" src="img/a9fec41fc8cf0de300400224b15fdf59.png" alt="學生簽名：劉騏銘"><canvas class="sigpad" width="720" height="140" aria-label="簽名區"></canvas><button class="sigclear" type="button">清除</button></div></div>
+<div class="datebox"><p class="k">日期：</p><input class="dy" aria-label="民國年" inputmode="numeric" maxlength="3" value="115"><span>年</span><input class="dm" aria-label="月" inputmode="numeric" maxlength="2" value="11"><span>月</span><input class="dd" aria-label="日" inputmode="numeric" maxlength="2" value="23"><span>日</span></div>
 </div>
-<aside>報告最後附上學術誠信與 AI 使用切結聲明。網頁版可以直接用滑鼠或觸控筆在簽名框簽名，日期欄可以自己填；PPT 版請列印後手寫。</aside>
+<aside>報告最後附上學術誠信與 AI 使用切結聲明。已放上本人手寫簽名與日期。網頁版按「清除」可以重新簽名，日期欄也可以修改。</aside>
 </section>
 
 <div id="buddy" role="img" aria-label="Q 版黃仁勳：可以拖著他去碰卡片，往右拖到底會翻下一頁"><div class="bd"><img class="p-idle" src="img/buddy.png" alt="" draggable="false"><img class="p-kick" src="img/kick.png" alt="" draggable="false"><img class="p-run" src="img/run.png" alt="" draggable="false"></div><p class="kfx">踢飛！</p></div>
@@ -2870,11 +2872,12 @@ section.pledge { background: #FDFCFA; }
     function done() { if (!drawing) return; drawing = false; try { localStorage.setItem('pledgeSig', cv.toDataURL()); } catch (e) {} }
     cv.addEventListener('pointerup', done); cv.addEventListener('pointercancel', done);
     var clr = cv.parentNode.querySelector('.sigclear');
-    if (clr) clr.addEventListener('click', function (e) { e.stopPropagation(); ctx.clearRect(0, 0, cv.width, cv.height); try { localStorage.removeItem('pledgeSig'); } catch (err) {} });
+    if (clr) clr.addEventListener('click', function (e) { e.stopPropagation(); ctx.clearRect(0, 0, cv.width, cv.height); cv.parentNode.classList.add('cleared'); try { localStorage.removeItem('pledgeSig'); localStorage.setItem('pledgeCleared', '1'); } catch (err) {} });
+    try { if (localStorage.getItem('pledgeCleared') === '1' || localStorage.getItem('pledgeSig')) cv.parentNode.classList.add('cleared'); } catch (e) {}
   });
   Array.prototype.forEach.call(document.querySelectorAll('.datebox input'), function (inp) {
     var k = 'pledgeDate_' + inp.className;
-    try { inp.value = localStorage.getItem(k) || ''; } catch (e) {}
+    try { var v = localStorage.getItem(k); if (v !== null) inp.value = v; } catch (e) {}
     inp.addEventListener('input', function () { inp.value = inp.value.replace(/\D/g, ''); try { localStorage.setItem(k, inp.value); } catch (e) {} });
   });
 
