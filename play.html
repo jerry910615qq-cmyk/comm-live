@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>溝通報告｜現場遊戲</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Layout: a single phone column; status card on top, the current question below. */
+:root {
+  --bg: #EFF2F4; --card: #FDFCFA; --ink: #3B4350; --muted: #626A77; --line: #D6DCE2;
+  --accent: #4F7189; --accent-soft: #DCE7EF; --warm: #9C5D3B; --warm-soft: #F5E1D3;
+  --ok: #3D6B4A; --ok-soft: #E6F1E8; --no: #8A4A40; --no-soft: #F8E6E2; --on-accent: #FBF8F3;
+  --font: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif; --num: 'Space Grotesk', 'Noto Sans TC', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #1D2329; --card: #283039; --ink: #E6EAEE; --muted: #AEB7C1; --line: #3B4652; --accent: #9DBBD0; --accent-soft: #2F3E4B; --warm: #E3B497; --warm-soft: #44352C; --ok: #9CCBA8; --ok-soft: #233A2B; --no: #E7A79C; --no-soft: #432A27; --on-accent: #1D2329; color-scheme: dark; }
+}
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 17px; line-height: 1.55; }
+.wrap { max-width: 520px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-top: calc(18px + env(safe-area-inset-top, 0px)); padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 14px; }
+h1 { font-size: 24px; margin: 0; line-height: 1.3; }
+.top { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 14px; color: var(--muted); }
+.pill { display: inline-flex; align-items: center; gap: 6px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; }
+.pill i { width: 9px; height: 9px; border-radius: 50%; background: #B9B4AC; display: inline-block; }
+.pill.on i { background: #4C9A63; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.big { font-family: var(--num); font-size: 56px; font-weight: 700; line-height: 1; color: var(--accent); margin: 0; }
+.muted { color: var(--muted); margin: 0; }
+label { font-weight: 700; }
+input { font: inherit; font-size: 18px; padding: 12px 14px; border-radius: 12px; border: 2px solid var(--line); background: var(--bg); color: var(--ink); min-width: 0; }
+.btn { font: 700 18px var(--font); border-radius: 14px; padding: 14px 18px; border: 0; background: var(--accent); color: var(--on-accent); cursor: pointer; }
+.q { font-size: 20px; font-weight: 700; margin: 0; }
+.opts { display: flex; flex-direction: column; gap: 10px; }
+.opt { text-align: left; font: inherit; color: var(--ink); background: var(--card); border: 2px solid var(--line); border-radius: 16px; padding: 14px 16px; cursor: pointer; }
+.opt.sel { border-color: var(--accent); background: var(--accent-soft); font-weight: 700; }
+.opt.ok { border-color: var(--ok); background: var(--ok-soft); }
+.opt.no { border-color: var(--no); background: var(--no-soft); }
+.opt[disabled] { cursor: default; }
+.res { font-size: 19px; font-weight: 700; margin: 0; padding: 10px 14px; border-radius: 12px; }
+.res.ok { color: var(--ok); background: var(--ok-soft); }
+.res.no { color: var(--no); background: var(--no-soft); }
+.code { font-family: var(--num); font-size: 44px; font-weight: 700; letter-spacing: 8px; color: var(--accent); margin: 0; }
+.btn:focus-visible, .opt:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><span class="pill" id="conn"><i></i><span id="connTxt">連線中…</span></span><span id="who"></span></div>
+<div id="app"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js"></script>
+<script>
+(function () {
+  var BROKERS = ['wss://broker.emqx.io:8084/mqtt', 'wss://broker.hivemq.com:8884/mqtt', 'wss://test.mosquitto.org:8081/mqtt'];
+  var P = 'comm8live/v1/';
+  var qs = new URLSearchParams(location.search);
+  var room = (qs.get('r') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
+  var bi = Math.max(0, Math.min(BROKERS.length - 1, parseInt(qs.get('b') || '0', 10) || 0));
+  var app = document.getElementById('app');
+  function lsGet(k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  var pid = lsGet('comm8pid'); if (!pid) { pid = 'p' + Math.random().toString(36).slice(2, 12); lsSet('comm8pid', pid); }
+  var me = lsGet('comm8me_' + room) || { name: '', joined: false, votes: {}, results: {} };
+  function save() { lsSet('comm8me_' + room, me); }
+  var st = null, connected = false, client = null, tries = 0;
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  function setConn() {
+    document.getElementById('conn').className = 'pill' + (connected ? ' on' : '');
+    document.getElementById('connTxt').textContent = connected ? '已連線｜房間 ' + room : '連線中…';
+    document.getElementById('who').textContent = me.joined ? me.name : '';
+  }
+  function connect() {
+    client = mqtt.connect(BROKERS[bi], { clientId: 'p_' + pid + '_' + Math.random().toString(16).slice(2, 6), clean: true, reconnectPeriod: 2000, connectTimeout: 8000, keepalive: 30 });
+    client.on('connect', function () { connected = true; tries = 0; client.subscribe(P + room + '/state', { qos: 1 }); if (me.joined) join(); setConn(); draw(); });
+    client.on('close', function () { connected = false; tries++; setConn(); draw(); });
+    client.on('message', function (t, m) {
+      var s = m.toString(); if (!s) { st = { phase: 'gone' }; draw(); return; }
+      try { st = JSON.parse(s); } catch (e) { return; }
+      if (st.q && st.q.status === 'closed' && me.votes[st.q.id] && !(st.q.id in me.results)) { me.results[st.q.id] = me.votes[st.q.id] === st.q.correct; save(); }
+      draw();
+    });
+  }
+  function join() { client.publish(P + room + '/join', JSON.stringify({ pid: pid, name: me.name }), { qos: 1 }); }
+  function vote(qid, c) { me.votes[qid] = c; save(); client.publish(P + room + '/vote', JSON.stringify({ pid: pid, name: me.name, qid: qid, c: c }), { qos: 1 }); draw(); }
+
+  function draw() {
+    if (!room) { app.innerHTML = '<div class="card"><h1>請掃大螢幕上的 QR code</h1><p class="muted">這個網址少了房間代碼。</p></div>'; return; }
+    if (!connected) {
+      app.innerHTML = '<div class="card"><h1>連線中…</h1><p class="muted">' + (tries > 2 ? '連不上的話，請關掉 Wi-Fi 改用行動網路，再重新整理這一頁。' : '請稍等幾秒。') + '</p></div>';
+      return;
+    }
+    if (!me.joined) {
+      app.innerHTML = '<div class="card"><h1>加入現場遊戲</h1><label for="nm">你的名字或暱稱</label><input id="nm" maxlength="20" autocomplete="nickname" placeholder="例如：小明"><button class="btn" id="go" type="button">加入</button></div>';
+      var nm = document.getElementById('nm'); nm.value = me.name || '';
+      document.getElementById('go').addEventListener('click', function () { me.name = nm.value.trim().slice(0, 20) || '匿名玩家'; me.joined = true; save(); join(); setConn(); draw(); });
+      return;
+    }
+    if (!st) { app.innerHTML = '<div class="card"><h1>已加入</h1><p class="muted">等報告人的簡報連上線……</p></div>'; return; }
+    if (st.phase === 'gone') { app.innerHTML = '<div class="card"><h1>這個房間已經關閉</h1><p class="muted">請重新掃大螢幕上的 QR code。</p></div>'; return; }
+    if (st.phase === 'lobby') { app.innerHTML = '<div class="card"><h1>你已加入！</h1><p class="big">' + (st.count || 0) + '</p><p class="muted">人已加入。等報告人按「開始遊戲」。</p></div>'; return; }
+    var q = st.q;
+    if (!q) { app.innerHTML = '<div class="card"><h1>請看大螢幕</h1><p class="muted">下一題出現時，這裡會自動跳出選項。</p></div>' + summary(); return; }
+    var mine = me.votes[q.id];
+    var h = '<div class="card"><p class="q">' + esc(q.prompt) + '</p><div class="opts">';
+    q.options.forEach(function (o) {
+      var cls = 'opt';
+      if (q.status === 'closed') { if (o.k === q.correct) cls += ' ok'; else if (o.k === mine) cls += ' no'; }
+      else if (o.k === mine) cls += ' sel';
+      h += '<button type="button" class="' + cls + '" data-k="' + esc(o.k) + '"' + (q.status === 'closed' ? ' disabled' : '') + '>' + esc(o.l) + '</button>';
+    });
+    h += '</div>';
+    if (q.status === 'open') h += '<p class="muted">' + (mine ? '已送出，截止前可以改選。' : '點一個選項作答。') + '</p>';
+    else h += '<p class="res ' + (mine === q.correct ? 'ok">✓ 答對了！' : 'no">' + (mine ? '✗ 這次沒答對' : '這題你沒有作答')) + '</p>';
+    h += '</div>';
+    app.innerHTML = h + summary();
+    Array.prototype.forEach.call(app.querySelectorAll('.opt'), function (b) { b.addEventListener('click', function () { vote(q.id, b.getAttribute('data-k')); }); });
+  }
+  function summary() {
+    var ids = ['elev1', 'elev2', 'elev3'];
+    if (!ids.every(function (id) { return id in me.results; })) return '';
+    var code = ids.map(function (id) { return me.votes[id]; }).join('');
+    var ok = ids.every(function (id) { return me.results[id]; });
+    return '<div class="card"><p class="muted">你的電梯簡報路線</p><p class="code">' + esc(code) + '</p><p class="res ' + (ok ? 'ok">✓ 主管認可：「好，明天把試用計畫寄給我。」' : 'no">✗ 主管說：「我再想想。」最佳路線是 BCA') + '</p></div>';
+  }
+  setConn(); draw();
+  if (room) { if (typeof mqtt === 'undefined') app.innerHTML = '<div class="card"><h1>載入失敗</h1><p class="muted">請重新整理這一頁。</p></div>'; else connect(); }
+})();
+</script>
+</body>
+</html>
