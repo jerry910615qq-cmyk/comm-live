@@ -43,6 +43,8 @@ input { font: inherit; font-size: 18px; padding: 12px 14px; border-radius: 12px;
 .res.no { color: var(--no); background: var(--no-soft); }
 .code { font-family: var(--num); font-size: 44px; font-weight: 700; letter-spacing: 8px; color: var(--accent); margin: 0; }
 .btn:focus-visible, .opt:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.tleft { margin: 0; font-size: 18px; font-weight: 700; color: var(--warm); }
+.tleft b { font-family: var(--num); font-size: 30px; }
 .kind { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--accent); }
 .res.lock { color: var(--accent); background: var(--accent-soft); }
 .center { text-align: center; }
@@ -67,7 +69,7 @@ input { font: inherit; font-size: 18px; padding: 12px 14px; border-radius: 12px;
 (function () {
   var BROKERS = ['wss://broker.emqx.io:8084/mqtt', 'wss://broker.hivemq.com:8884/mqtt', 'wss://test.mosquitto.org:8081/mqtt'];
   var P = 'comm8live/v1/';
-  var SCORE = { elev1: { A: 18, B: 34, C: 10 }, elev2: { A: 33, B: 20, C: 8 }, elev3: { A: 22, B: 8, C: 33 } };
+  var SCORE = { elev1: { A: 18, B: 34, C: 10 }, elev2: { A: 33, B: 8, C: 14 }, elev3: { A: 22, B: 8, C: 33 } };
   var ELEV = ['elev1', 'elev2', 'elev3'];
   var TEACHER = '<svg class="teach" viewBox="0 0 240 170" aria-hidden="true">' +
     '<rect x="70" y="14" width="156" height="104" rx="10" fill="#4F7189"/>' +
@@ -90,7 +92,7 @@ input { font: inherit; font-size: 18px; padding: 12px 14px; border-radius: 12px;
   var me = lsGet('comm8me_' + room) || {};
   me.name = me.name || ''; me.joined = !!me.joined; me.votes = me.votes || {}; me.results = me.results || {}; me.endSeen = !!me.endSeen;
   function save() { lsSet('comm8me_' + room, me); }
-  var st = null, connected = false, client = null, tries = 0, timer = null, everUp = false;
+  var st = null, connected = false, client = null, tries = 0, timer = null, everUp = false, qEnd = {}, clock = null;
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
   function setConn() {
@@ -121,6 +123,7 @@ input { font: inherit; font-size: 18px; padding: 12px 14px; border-radius: 12px;
       var s = m.toString(); if (!s) { st = { phase: 'gone' }; draw(); return; }
       try { st = JSON.parse(s); } catch (e) { return; }
       var q = st.q;
+      if (q && q.status === 'open' && !(q.id in qEnd)) qEnd[q.id] = Date.now() + (q.left || 0);
       if (q && q.status === 'closed' && q.correct && me.votes[q.id] && !(q.id in me.results)) { me.results[q.id] = me.votes[q.id] === q.correct; save(); }
       if (st.slide === 'elevend' && !me.endSeen) { me.endSeen = true; save(); }
       draw();
@@ -154,13 +157,15 @@ input { font: inherit; font-size: 18px; padding: 12px 14px; border-radius: 12px;
       h += '<button type="button" class="' + cls + '" data-k="' + esc(o.k) + '"' + (q.status === 'closed' ? ' disabled' : '') + '>' + esc(o.l) + '</button>';
     });
     h += '</div>';
-    if (q.status === 'open') h += '<p class="muted">' + (mine ? '已送出，截止前可以改選。' : '點一個選項作答。') + '</p>';
+    if (q.status === 'open') h += '<p class="tleft">剩 <b id="tl">' + secsLeft(q) + '</b> 秒</p><p class="muted">' + (mine ? '已送出，截止前可以改選。' : '點一個選項作答。') + '</p>';
     else if (isElev) h += '<p class="res lock">' + (mine ? '已鎖定你的回答：' + esc(mine) + '。說服率到 50 樓一起揭曉！' : '這一關你沒有作答。') + '</p>';
     else if (!mine) h += '<p class="res no">這題你沒有作答</p>';
     else h += mine === q.correct ? '<p class="res ok">✓ 答對了！</p>' : '<p class="res no">哦，這題你可能錯誤囉～</p>';
     app.innerHTML = card(h) + (q.status === 'closed' ? elevSummary() : '') + scoreCard();
     Array.prototype.forEach.call(app.querySelectorAll('.opt'), function (b) { b.addEventListener('click', function () { vote(q.id, b.getAttribute('data-k')); }); });
   }
+  function secsLeft(q) { return Math.max(0, Math.ceil(((qEnd[q.id] || Date.now()) - Date.now()) / 1000)); }
+  setInterval(function () { var el = document.getElementById('tl'); if (el && st && st.q && st.q.status === 'open') el.textContent = secsLeft(st.q); }, 250);
   function scoreCard() {
     var ids = Object.keys(me.results); if (!ids.length) return '';
     var ok = ids.filter(function (id) { return me.results[id]; }).length, pct = Math.round(ok / ids.length * 100);

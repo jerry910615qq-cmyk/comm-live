@@ -97,19 +97,30 @@ body.side #viewport { right: 372px; }
 /* chibi helper: drops in on every slide, drag it onto a card to flip it */
 #deck { user-select: none; -webkit-user-select: none; }
 #buddy { position: absolute; left: 4px; top: 842px; width: 118px; height: 232px; z-index: 25; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
-#buddy img { width: 100%; height: 100%; display: block; pointer-events: none; filter: drop-shadow(0 6px 8px rgba(20, 28, 36, 0.25)); }
-#buddy .bd { transform-origin: 50% 100%; }
+#buddy .bd { position: absolute; inset: 0; transform-origin: 50% 100%; }
+#buddy img { display: none; position: absolute; left: 0; bottom: 0; height: 100%; width: auto; pointer-events: none; filter: drop-shadow(0 6px 8px rgba(20, 28, 36, 0.25)); }
+#buddy:not(.pose-kick):not(.pose-run) .p-idle, #buddy.pose-kick .p-kick, #buddy.pose-run .p-run { display: block; }
+#buddy.pose-kick .p-kick { left: -20px; }
+#buddy.face-left .p-run { scale: -1 1; }
+#buddy.pose-run .p-run { animation: runbob 0.26s ease-in-out infinite alternate; }
+@keyframes runbob { from { transform: translateY(0) rotate(-3deg); } to { transform: translateY(-16px) rotate(3deg); } }
 #buddy.drop .bd { animation: buddyDrop 0.95s cubic-bezier(0.3, 0.7, 0.3, 1) both; }
 @keyframes buddyDrop { 0% { transform: translate(60px, -1000px) rotate(-30deg); } 55% { transform: translate(0, 0) scale(1.12, 0.82); } 70% { transform: translate(0, -60px) scale(0.94, 1.06); } 84% { transform: translate(0, 0) scale(1.05, 0.95); } 100% { transform: none; } }
 #buddy.home { transition: left 0.55s cubic-bezier(0.3, 0.7, 0.3, 1.25), top 0.55s cubic-bezier(0.3, 0.7, 0.3, 1.25); }
+#buddy.runoff { transition: left 0.45s ease-in; }
 #buddy.drag { cursor: grabbing; }
-#buddy.drag .bd { transform: scale(1.1) rotate(-8deg); filter: drop-shadow(0 16px 14px rgba(20, 28, 36, 0.3)); }
+#buddy.drag .bd { transform: scale(1.08); filter: drop-shadow(0 16px 14px rgba(20, 28, 36, 0.3)); }
 #buddy.hit .bd { animation: buddyHit 0.45s ease both; }
-@keyframes buddyHit { 0% { transform: scale(1.1) rotate(-8deg); } 40% { transform: scale(1.3) rotate(10deg); } 100% { transform: scale(1.1) rotate(-8deg); } }
+@keyframes buddyHit { 0% { transform: scale(1.08); } 40% { transform: scale(1.25) rotate(8deg); } 100% { transform: scale(1.08); } }
 #buddy.hop .bd { animation: buddyHop 0.5s ease both; }
 @keyframes buddyHop { 0% { transform: none; } 40% { transform: translateY(-70px) rotate(8deg); } 70% { transform: translateY(0) scale(1.08, 0.9); } 100% { transform: none; } }
-#buddy .wave { transform-origin: 46px 166px; animation: wave 1.6s ease-in-out infinite; }
-@keyframes wave { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-22deg); } }
+#buddy.kicking .bd { animation: kickLunge 0.9s ease both; }
+@keyframes kickLunge { 0% { transform: translateX(0) rotate(0deg); } 25% { transform: translateX(-36px) rotate(-10deg); } 45% { transform: translateX(70px) rotate(6deg) scale(1.15); } 100% { transform: translateX(0) rotate(0deg); } }
+#buddy .kfx { position: absolute; left: 150px; top: 30px; margin: 0; font: 900 64px 'Noto Sans TC', sans-serif; color: #E4572E; text-shadow: 0 3px 0 #FDFCFA; opacity: 0; pointer-events: none; white-space: nowrap; }
+#buddy.kicking .kfx { animation: kfx 0.9s ease-out both; }
+@keyframes kfx { 0%, 30% { opacity: 0; transform: scale(0.4) rotate(-10deg); } 45% { opacity: 1; transform: scale(1.2) rotate(6deg); } 75% { opacity: 1; transform: scale(1) rotate(0deg); } 100% { opacity: 0; transform: translateY(-30px); } }
+#buddy.stroll { animation: stroll 22s linear infinite; }
+@keyframes stroll { from { transform: translateX(-140px); } to { transform: translateX(2000px); } }
 .touch, .mcard { cursor: pointer; }
 .touchglow { box-shadow: 0 0 0 8px rgba(143, 174, 195, 0.75), 0 0 40px rgba(79, 113, 137, 0.6) !important; border-radius: 24px; }
 /* elevator options: the class pick, without covering any text */
@@ -117,6 +128,7 @@ body.side #viewport { right: 372px; }
 #deck .opt.picked { border-color: #4F7189; background-color: #DCE7EF; }
 #deck .opt .vtag { position: absolute; top: 22px; right: 22px; margin: 0; font-size: 22px; font-weight: 700; color: #FBF8F3; background: #4F7189; border-radius: 999px; padding: 4px 14px; }
 #deck .eclass { margin: 0; font-size: 30px; font-weight: 700; color: #34536A; background: #DCE7EF; border-radius: 16px; padding: 16px 26px; }
+#zoom .zcount { margin: 18px 0 0; font: 700 48px 'Space Grotesk', 'Noto Sans TC', sans-serif; color: #9C5D3B; min-height: 56px; }
 #zoom .zhint { grid-column: 1 / -1; margin: 0; font-size: 28px; color: #9C5D3B; font-weight: 700; text-align: right; }
 .slip.right { animation: rightFlash 0.45s ease-in-out 2 both !important; }
 @keyframes rightFlash { 0% { background-color: #E6F1E8; } 50% { background-color: #B9DCC2; } 100% { background-color: #E6F1E8; } }
@@ -1014,6 +1026,28 @@ section.lift { background: #EFF2F4; }
 .heart { position: absolute; top: 380px; margin: 0; font-size: 46px; color: #E4572E; opacity: 0; animation: heart 2.8s ease-out infinite; }
 @keyframes heart { 0% { opacity: 0; transform: translateY(0) scale(0.6); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateY(-220px) scale(1.2); } }
 
+/* ---------- paper review slides ---------- */
+.pinfo { display: flex; flex-direction: column; gap: 14px; background: var(--card); border-radius: 24px; padding: 40px 48px; box-shadow: 0 4px 16px rgba(59, 67, 80, 0.07); }
+.ptitle { font-size: 46px; font-weight: 700; color: var(--dark); margin: 0 0 12px; line-height: 1.35; }
+.prow2 { display: grid; grid-template-columns: 140px 1fr; gap: 20px; align-items: baseline; border-top: 2px solid var(--teal-l); padding-top: 14px; }
+.prow2 .k { font-size: 28px; font-weight: 700; color: var(--teal); margin: 0; }
+.prow2 .v { font-size: 32px; color: var(--ink); margin: 0; }
+.pgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.pgrid.two { grid-template-columns: repeat(2, 1fr); }
+.pcard { background: var(--card); border-radius: 20px; padding: 28px 32px; border-top: 8px solid var(--teal-m); box-shadow: 0 4px 16px rgba(59, 67, 80, 0.07); display: flex; flex-direction: column; gap: 10px; }
+.pcard.o { border-top-color: #E3B497; }
+.pcard .h { font-size: 34px; font-weight: 700; color: var(--dark); margin: 0; }
+.pcard .b { font-size: 29px; line-height: 1.5; color: var(--ink); margin: 0; }
+.pcard .big { font-family: 'Space Grotesk', Arial, sans-serif; font-size: 64px; color: var(--teal); }
+.pnote { font-size: 28px; color: var(--ink); background: var(--teal-l); border-radius: 14px; padding: 16px 24px; margin: 24px 0 0; }
+.pres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 24px; }
+.pstat { background: var(--dark); border-radius: 20px; padding: 26px 30px; display: flex; flex-direction: column; gap: 6px; }
+.pstat .lab { font-size: 26px; color: var(--on-dark-m); margin: 0; }
+.pstat .num { font-family: 'Space Grotesk', 'Noto Sans TC', Arial, sans-serif; font-size: 58px; font-weight: 700; color: var(--mint); margin: 0; line-height: 1.1; }
+.pstat .sig { font-size: 26px; color: var(--on-dark); margin: 0; }
+.pstat.o { background: #7A4428; }
+.pstat.o .num { color: #F5E1D3; }
+
 
 #liveBadge { position: fixed; top: calc(10px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); z-index: 35; display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--btn-bg); color: var(--btn-fg); border: 1px solid var(--btn-line); font: 500 14px 'Noto Sans TC', system-ui, sans-serif; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12); }
 #liveBadge .dot { width: 10px; height: 10px; border-radius: 50%; background: #B9B4AC; }
@@ -1037,6 +1071,7 @@ section.lift { background: #EFF2F4; }
 .shell-panel button.primary { background: #4F7189; color: #FBF8F3; border-color: #4F7189; font-weight: 700; }
 #poll { position: fixed; right: max(12px, env(safe-area-inset-right, 0px)); top: calc(60px + env(safe-area-inset-top, 0px)); bottom: calc(70px + env(safe-area-inset-bottom, 0px)); width: 348px; z-index: 34; background: #FDFCFA; border: 2px solid #4F7189; border-radius: 18px; padding: 18px; box-sizing: border-box; box-shadow: 0 12px 30px rgba(20, 28, 36, 0.2); font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif; color: #3B4350; display: flex; flex-direction: column; gap: 10px; overflow: auto; }
 #poll .pk { margin: 0; font-size: 13px; font-weight: 700; color: #4F7189; letter-spacing: 1px; }
+#poll .pcount { margin: 0; align-self: flex-end; width: 64px; height: 64px; border-radius: 50%; background: #9C5D3B; color: #FBF8F3; font: 700 34px/64px 'Space Grotesk', sans-serif; text-align: center; }
 #poll .pq { margin: 0; font-size: 18px; font-weight: 700; line-height: 1.45; }
 #poll .prow { display: grid; grid-template-columns: 1fr 44px; grid-template-rows: auto 14px; gap: 4px 10px; align-items: center; font-size: 15px; border-radius: 10px; padding: 6px 8px; }
 #poll .prow .pl { grid-column: 1; line-height: 1.4; }
@@ -1209,7 +1244,7 @@ section.lift { background: #EFF2F4; }
 </div>
 </div>
 </div>
-<aside>第一關：主管只給你幾秒。三個開場都有禮貌、也都跟筆有關，差在第一句有沒有講到「主管在乎的結果」。先讓大家用手機選，這一關不公布對錯，最後在 50 樓一起算說服率。</aside>
+<aside>第一關：主管只給你幾秒。三個開場都有禮貌，差在第一句有沒有把提案連到主管在乎的目標。每題 10 秒，時間到自動截止，不公布對錯，最後在 50 樓一起算說服率。</aside>
 </section>
 
 <section id="elev2" class="lift">
@@ -1250,16 +1285,16 @@ section.lift { background: #EFF2F4; }
 </div>
 <div class="opt" data-k="B">
 <p class="l">B</p>
-<p class="t">「競爭對手上個月已經導入了，我們不跟上，客戶可能覺得我們比較慢。」</p>
+<p class="t">「這件事真的很急，您今天一定要點頭，不然就來不及了。」</p>
 </div>
 <div class="opt" data-k="C">
 <p class="l">C</p>
-<p class="t">「這是今年最新款，這個月下單還有早鳥九折，錯過就沒了。」</p>
+<p class="t">「主管您眼光最好了，一定一眼就看得出這支筆的價值。」</p>
 </div>
 </div>
 </div>
 </div>
-<aside>第二關：主管在問「不做會怎樣」。三個答案都在製造急迫感，差在急迫感來自主管自己的目標、來自外部壓力，還是來自促銷。一樣先讓大家選，不公布對錯。</aside>
+<aside>第二關：主管問「為什麼是現在」。A 是用數據講道理（理性說服），B 是施壓，C 是奉承。每題 10 秒，最後在 50 樓一起算說服率。</aside>
 </section>
 
 <section id="elev3" class="lift">
@@ -1309,7 +1344,7 @@ section.lift { background: #EFF2F4; }
 </div>
 </div>
 </div>
-<aside>第三關：主管問成本和風險。三個答案都很誠懇，差在有沒有把成本講清楚、有沒有降低主管點頭的風險，以及有沒有讓主管參與決定。選完就到 50 樓算說服率。</aside>
+<aside>第三關：主管問成本和風險。A 有算錢但把話說死，B 還沒準備好，C 先講成本、用小規模試辦降低風險，最後請主管一起決定。每題 10 秒，選完就到 50 樓算說服率。</aside>
 </section>
 
 <section id="elevend" class="lift">
@@ -1322,9 +1357,9 @@ section.lift { background: #EFF2F4; }
 <p class="goal">說服率<br>＝三關加總</p>
 </div>
 <div class="epath">
-<div class="escore rise" style="--i:1"><p class="r">第 1 關</p><p class="s">A <b>18</b></p><p class="s best">B <b>34</b></p><p class="s">C <b>10</b></p><p class="c">先講主管在乎的結果</p></div>
-<div class="escore rise" style="--i:2"><p class="r">第 2 關</p><p class="s best">A <b>33</b></p><p class="s">B <b>20</b></p><p class="s">C <b>8</b></p><p class="c">說出「不做的代價」</p></div>
-<div class="escore rise" style="--i:3"><p class="r">第 3 關</p><p class="s">A <b>22</b></p><p class="s">B <b>8</b></p><p class="s best">C <b>33</b></p><p class="c">成本講清楚、小規模試辦</p></div>
+<div class="escore rise" style="--i:1"><p class="r">第 1 關</p><p class="s">A <b>18</b></p><p class="s best">B <b>34</b></p><p class="s">C <b>10</b></p><p class="c">把提案連到主管的目標</p></div>
+<div class="escore rise" style="--i:2"><p class="r">第 2 關</p><p class="s best">A <b>33</b></p><p class="s">B <b>8</b></p><p class="s">C <b>14</b></p><p class="c">講道理，勝過施壓、奉承</p></div>
+<div class="escore rise" style="--i:3"><p class="r">第 3 關</p><p class="s">A <b>22</b></p><p class="s">B <b>8</b></p><p class="s best">C <b>33</b></p><p class="c">小規模試辦＋請主管參與</p></div>
 <div class="etier rise" style="--i:4">
 <p class="k">90–100%</p><p class="v">「好，下週就開始試辦。」</p>
 <p class="k">65–89%</p><p class="v">「有點意思，把數字整理好再來找我。」</p>
@@ -1332,7 +1367,7 @@ section.lift { background: #EFF2F4; }
 </div>
 </div>
 </div>
-<aside>公布計分方式：每一關的選項都有分數，三關加起來就是你說服主管的機率，滿分 100%（B → A → C）。這不是標準答案，而是參考網路上常見的「向主管提案」建議：第一句先講跟主管目標有關的問題和好處；被問「為什麼現在」時，說清楚不做的代價；被問成本和風險時，先把錢講清楚，再用小規模試辦降低風險，最後邀主管一起決定。其他選項也不是錯，只是比較難讓主管當場點頭：功能介紹、競爭壓力、算好的回本數字都有分數；改天再約、促銷、還沒準備好價格分數最低。網頁版這頁會列出每位同學的路線和說服率。（參考：Atlassian、The Muse、GoTo 等「如何向主管提案」文章）</aside>
+<aside>公布計分方式：每一關的選項都有分數，三關加起來就是你說服主管的機率，滿分 100%（B → A → C）。分數不是我們自己訂的，而是對照兩篇組織行為的經典研究。第一，Yukl 與 Tracey（1992，Journal of Applied Psychology）調查人們對上司、同事、部屬用的九種影響策略，發現「理性說服」是對上司最常用、也最有效的策略之一，「施壓」效果最差，「奉承」和「交換條件」對上司則沒有效果，所以第 2 關 A 最高、施壓最低。第二，Dutton 等人（2001，Academy of Management Journal）研究員工怎麼向高層「推銷議題」，發現成功的人會把議題包裝成跟組織目標有關的商業理由，並且邀請相關的人一起參與，所以第 1 關先講主管目標的 B、第 3 關小規模試辦又請主管一起決定的 C 分數最高。其他選項不是錯，只是比較難讓主管當場點頭。</aside>
 </section>
 
 <section id="model" class="alt">
@@ -1488,10 +1523,10 @@ section.lift { background: #EFF2F4; }
 </div>
 <div class="spacer"></div>
 <div class="strip rise" style="--i:3">
-<p class="t">是你喔？</p>
+<p class="t">劉騏銘？</p>
 <p class="m">語調不一樣就會有不同意思</p>
 </div>
-<aside>口語最快，但轉述會走樣；非言語包括肢體和號誌；書面有證據、可保存，但回饋慢。表 8-1 的例子：同一句話，重音放在「我」、「今晚」或「你」，意思都不一樣。可以現場用自己的名字示範：「是你喔？」「是你喔！」「是你喔……」，語調不同，意思就不同。</aside>
+<aside>口語最快，但轉述會走樣；非言語包括肢體和號誌；書面有證據、可保存，但回饋慢。表 8-1 的例子：同一句話，重音放在「我」、「今晚」或「你」，意思都不一樣。可以現場用自己的名字示範：「劉騏銘？」「劉騏銘！」「劉騏銘……」，語調不同，意思就不同。</aside>
 </section>
 
 <section id="media" class="alt">
@@ -2214,6 +2249,70 @@ section.lift { background: #EFF2F4; }
 <aside>最後用章前的三個問題收尾，每題用一行回顧今天的內容。接著可以開放大家討論。</aside>
 </section>
 
+<section id="paper1" class="alt paper">
+<h2>期刊導讀｜AI 聊天機器人陪練諮商技巧</h2>
+<div class="pinfo">
+<p class="ptitle">導入聊天機器人輔助「諮商技巧」課程教學之效果研究</p>
+<div class="prow2"><p class="k">作者</p><p class="v">謝麗紅、陳亭妍、張瑋珊、劉嘉吉、鄧志平</p></div>
+<div class="prow2"><p class="k">單位</p><p class="v">國立彰化師範大學 輔導與諮商學系、物理學系</p></div>
+<div class="prow2"><p class="k">期刊</p><p class="v">教育心理學報（臺師大），2025，56 卷 3 期，681–708 頁</p></div>
+<div class="prow2"><p class="k">DOI</p><p class="v">10.6251/BEP.202503_56(3).0008</p></div>
+<div class="prow2"><p class="k">經費</p><p class="v">教育部 111 年教學實踐研究計畫（PED1120518）</p></div>
+<div class="prow2"><p class="k">關鍵詞</p><p class="v">聊天機器人、諮商技巧、人工智慧、標準化個案、課程教學</p></div>
+</div>
+<aside>這篇是我找的延伸期刊，跟今天的溝通主題有關：諮商技巧本質上就是溝通技巧。刊在臺師大的《教育心理學報》，屬於國內教育心理領域的重要期刊。</aside>
+</section>
+
+<section id="paper2" class="alt paper">
+<h2>研究目的與設計</h2>
+<div class="pgrid">
+<div class="pcard"><p class="h">研究目的</p><p class="b">讓 AI 聊天機器人扮演「模擬個案」，看它能不能幫大學生練好諮商技巧</p></div>
+<div class="pcard"><p class="h">研究設計</p><p class="b">單組前後測（前實驗設計）＋質性訪談的混合方法</p></div>
+<div class="pcard"><p class="h">研究對象</p><p class="b">中部某大學諮商系大三，必修「諮商技巧」<br><b class="big">35</b> 人（男：女 ≈ 1：3）</p></div>
+<div class="pcard"><p class="h">教學方式</p><p class="b">14 週、每週一個技巧：簡述語意、情感反映、同理心、探問、摘要、立即性、自我揭露、面質……</p></div>
+<div class="pcard o"><p class="h">聊天機器人</p><p class="b">作者團隊用國科會計畫自己開發，課後用文字或語音跟虛擬個案練習</p></div>
+<div class="pcard o"><p class="h">課堂搭配</p><p class="b">老師示範、同儕演練、寫逐字稿，機器人負責課後自主練習</p></div>
+</div>
+<aside>研究目的是看「導入聊天機器人」能不能輔助諮商技巧課。設計是單一班級、課前課後各測一次，再加上反思札記和焦點團體訪談，所以是量化加質性的混合方法。機器人是第一作者 110 到 111 年國科會計畫開發的模擬案主。</aside>
+</section>
+
+<section id="paper3" class="alt paper">
+<h2>怎麼測量？</h2>
+<div class="pgrid two">
+<div class="pcard"><p class="h">個別諮商能力評量表</p><p class="b">劉淑慧（1999）編製，8 個分量表<br>信度 α = .76 – .90</p></div>
+<div class="pcard"><p class="h">傑佛遜同理心量表</p><p class="b">Hojat 等人（2001）醫護版，改成諮商版<br>20 題、3 個分量表</p></div>
+<div class="pcard o"><p class="h">同理心反思札記</p><p class="b">練習過半時撰寫，由助教匿名收集</p></div>
+<div class="pcard o"><p class="h">焦點團體訪談</p><p class="b">期末後半結構訪談，交成績後才分析</p></div>
+</div>
+<p class="pnote">分析：前後測用成對樣本 t 檢定（SPSS）；質性資料用 Hycner（1985）現象學內容分析</p>
+<aside>量化工具有兩個量表，質性有反思札記和焦點團體。值得一提的研究倫理設計：訪談由助理進行、匿名，而且老師交出成績之後才分析資料，避免影響學生。</aside>
+</section>
+
+<section id="paper4" class="alt paper">
+<h2>研究結果</h2>
+<div class="pres">
+<div class="pstat"><p class="lab">個別諮商能力總分</p><p class="num">89.4 → 101.9</p><p class="sig">t = 6.65，p < .001</p></div>
+<div class="pstat"><p class="lab">練習次數 × 課程成績</p><p class="num">r = .435</p><p class="sig">練越多次，成績越好（p < .05）</p></div>
+<div class="pstat o"><p class="lab">同理心量表總分</p><p class="num">119.4 → 118.1</p><p class="sig">沒有顯著變化；「情感關懷」反而下降</p></div>
+</div>
+<div class="pgrid two">
+<div class="pcard"><p class="h">進步的能力</p><p class="b">8 個分量表中 7 個顯著進步，只有「人格傾向」沒有</p></div>
+<div class="pcard"><p class="h">學生怎麼說</p><p class="b">練習成本變低、比較不焦慮、不怕傷到真的個案、更想自己練</p></div>
+</div>
+<aside>量化結果：個別諮商能力總分顯著進步，八個分量表中有七個顯著，只有人格傾向沒有。但同理心量表沒有進步，情感關懷甚至下降，作者認為值得再探討，可能是兩個量表測的東西不同。練習次數和成績有中度正相關。質性分析歸納出四大主題：課程多元設計、提升自主學習意願、機器人的優勢與挑戰，以及整體回饋。</aside>
+</section>
+
+<section id="paper5" class="alt paper">
+<h2>研究限制與我的觀察</h2>
+<div class="pgrid two">
+<div class="pcard"><p class="h">作者自己說的限制</p><p class="b">機器人要搭配其他教學一起用，不能取代傳統的諮商師訓練</p></div>
+<div class="pcard"><p class="h">作者的建議</p><p class="b">語料庫再豐富、外表更像青少年個案，並推廣到不同階段的諮商員</p></div>
+<div class="pcard o"><p class="h">我的觀察：設計</p><p class="b">只有一班、沒有對照組，進步不一定全是機器人的功勞</p></div>
+<div class="pcard o"><p class="h">連回本章「溝通」</p><p class="b">簡述語意、情感反映就是「解碼＋回饋」；AI 是一個不怕犯錯的練習對象</p></div>
+</div>
+<aside>左邊是作者自己寫的限制和建議；右邊橘色的是我讀完的看法：單組前後測沒有對照組，所以進步可能也來自老師的教學或同儕演練。最後連回今天的主題：諮商技巧其實就是溝通模型裡的解碼和回饋，AI 讓學生可以先在安全的環境練習溝通。</aside>
+</section>
+
 <section id="thanks" class="dark" style="justify-content:center">
 <p class="bignum">8</p>
 <p class="eyebrow">Q &amp; A</p>
@@ -2222,10 +2321,10 @@ section.lift { background: #EFF2F4; }
 <aside>謝謝大家，歡迎提問。</aside>
 </section>
 
-<div id="buddy" role="img" aria-label="Q 版黃仁勳：可以拖著他去碰卡片"><img class="bd" src="img/buddy.png" alt="" draggable="false"></div>
+<div id="buddy" role="img" aria-label="Q 版黃仁勳：可以拖著他去碰卡片，往右拖到底會翻下一頁"><div class="bd"><img class="p-idle" src="img/buddy.png" alt="" draggable="false"><img class="p-kick" src="img/kick.png" alt="" draggable="false"><img class="p-run" src="img/run.png" alt="" draggable="false"></div><p class="kfx">踢飛！</p></div>
 <div id="zoom" hidden>
 <div class="zc" role="dialog" aria-label="投票：這句話是誰說的">
-<div><p class="zname"></p><p class="zdesc"></p><p class="zq">請大家用手機投票：上司說的，還是下屬說的？</p></div>
+<div><p class="zname"></p><p class="zdesc"></p><p class="zq">請大家用手機投票：上司說的，還是下屬說的？</p><p class="zcount"></p></div>
 <div class="pie"><span>還沒有票</span></div>
 <div class="tally">
 <div class="trow boss"><b>上司說的</b><output data-out="boss">0</output><span class="tu">票</span></div>
@@ -2295,7 +2394,7 @@ section.lift { background: #EFF2F4; }
   var zoomEl = document.getElementById('zoom');
   var scrubEl = document.getElementById('scrub'), scrubTip = document.getElementById('scrubTip'), barEl = document.getElementById('bar');
   var SLIP = { s0: [838, 10], s1: [-818, 10], s2: [586, 18], s3: [-818, 18], s4: [838, -114], s5: [-566, -254], s6: [586, -386], s7: [-566, -246] };
-  var SCORE = { elev1: { A: 18, B: 34, C: 10 }, elev2: { A: 33, B: 20, C: 8 }, elev3: { A: 22, B: 8, C: 33 } };
+  var SCORE = { elev1: { A: 18, B: 34, C: 10 }, elev2: { A: 33, B: 8, C: 14 }, elev3: { A: 22, B: 8, C: 33 } };
   var ELEV = ['elev1', 'elev2', 'elev3'];
   var classPick = {};
   var cur = 0, scale = 1, scrubbing = false;
@@ -2426,6 +2525,7 @@ section.lift { background: #EFF2F4; }
     zoomEl.querySelector('.zname').textContent = slip.querySelector('.t').textContent;
     zoomEl.querySelector('.zdesc').textContent = slip.querySelector('.m').textContent;
     zoomEl.querySelector('.zhint').textContent = '';
+    zoomEl.querySelector('.zcount').textContent = '';
     drawPie();
     zoomEl.hidden = false;
     zoomEl.querySelector('.go').focus();
@@ -2480,10 +2580,11 @@ section.lift { background: #EFF2F4; }
     fs.sort(function (a, b) { return (+a.getAttribute('data-fragment-index') || 0) - (+b.getAttribute('data-fragment-index') || 0); });
     return fs[0];
   }
+  var lastReveal = null;
   function activate(t, byBuddy) {
     if (!t || zoomEl._slip) return false;
     if (t.matches('.slip.fragment')) { if (t.classList.contains('visible')) return false; openZoom(t); return true; }
-    if (t.matches('.bcard, .jcard, .touch')) { var f = firstHidden(t); if (!f) return false; revealEl(f); return true; }
+    if (t.matches('.bcard, .jcard, .touch')) { var f = firstHidden(t); if (!f) return false; lastReveal = f; revealEl(f); return true; }
     if (t.matches('.fly.fragment, .vfly.fragment')) {
       if (t.classList.contains('visible')) return false;
       if (window.DECK && DECK.onChip && DECK.onChip(t)) return true;
@@ -2500,12 +2601,27 @@ section.lift { background: #EFF2F4; }
   });
 
   // ---- chibi helper (Q 版小人) ----
-  var buddy = document.getElementById('buddy'), HOME = { x: 4, y: 842 }, bpos = { x: HOME.x, y: HOME.y }, drag = null, lastHit = null;
+  var buddy = document.getElementById('buddy'), HOME = { x: 4, y: 842 }, bpos = { x: HOME.x, y: HOME.y }, drag = null, lastHit = null, poseTimer = null, turning = false, kicking = false;
   function placeBuddy() { buddy.style.left = bpos.x + 'px'; buddy.style.top = bpos.y + 'px'; }
+  function pose(p, left) {
+    buddy.classList.remove('pose-kick', 'pose-run');
+    if (p) buddy.classList.add('pose-' + p);
+    buddy.classList.toggle('face-left', !!left);
+  }
   function buddyDrop() {
     if (drag) return;
-    buddy.classList.remove('home', 'drop', 'hop'); bpos = { x: HOME.x, y: HOME.y }; placeBuddy();
-    void buddy.offsetWidth; buddy.classList.add('drop');
+    clearTimeout(poseTimer); kicking = false; pose(null);
+    buddy.classList.remove('home', 'drop', 'hop', 'stroll', 'runoff', 'kicking');
+    bpos = { x: HOME.x, y: HOME.y }; placeBuddy();
+    void buddy.offsetWidth;
+    // on the paper-review slides he just keeps jogging across the bottom
+    if (slides[cur].classList.contains('paper')) { pose('run'); buddy.classList.add('stroll'); return; }
+    buddy.classList.add('drop');
+  }
+  function kick() {
+    clearTimeout(poseTimer); kicking = true; pose('kick');
+    buddy.classList.remove('kicking'); void buddy.offsetWidth; buddy.classList.add('kicking');
+    poseTimer = setTimeout(function () { kicking = false; buddy.classList.remove('kicking'); pose(null); }, 950);
   }
   function glow(el, on) { if (el) el.classList.toggle('touchglow', on); }
   function hitAt(cx, cy) {
@@ -2516,10 +2632,27 @@ section.lift { background: #EFF2F4; }
     var t = el.closest(TOUCH);
     return t && !t.matches('.opt[data-k]') ? t : null;
   }
+  function pageTurn() {
+    // dragged all the way to the right: run off the slide and turn the page
+    turning = true; drag = null;
+    glow(lastHit, false); lastHit = null;
+    buddy.classList.remove('drag', 'hit', 'home');
+    pose('run'); buddy.classList.add('runoff');
+    bpos.x = 2040; placeBuddy();
+    setTimeout(function () {
+      turning = false; buddy.classList.remove('runoff');
+      if (cur < slides.length - 1) go(cur + 1, 1); else buddyDrop();
+    }, 470);
+  }
   buddy.addEventListener('pointerdown', function (e) {
     e.preventDefault(); e.stopPropagation();
+    if (turning) return;
+    if (buddy.classList.contains('stroll')) {
+      var r = buddy.getBoundingClientRect(), d = deckEl.getBoundingClientRect();
+      bpos.x = (r.left - d.left) / scale; buddy.classList.remove('stroll'); placeBuddy(); pose(null);
+    }
     buddy.classList.remove('home', 'drop', 'hop');
-    drag = { sx: e.clientX, sy: e.clientY, x: bpos.x, y: bpos.y, moved: false };
+    drag = { sx: e.clientX, sy: e.clientY, x: bpos.x, y: bpos.y, lx: e.clientX, moved: false };
     try { buddy.setPointerCapture(e.pointerId); } catch (err) {}
   });
   buddy.addEventListener('pointermove', function (e) {
@@ -2527,11 +2660,23 @@ section.lift { background: #EFF2F4; }
     var dx = (e.clientX - drag.sx) / scale, dy = (e.clientY - drag.sy) / scale;
     if (!drag.moved && Math.abs(dx) + Math.abs(dy) < 8) return;
     if (!drag.moved) { drag.moved = true; buddy.classList.add('drag'); }
+    var vx = e.clientX - drag.lx; drag.lx = e.clientX;
+    if (!kicking && Math.abs(vx) > 1) {
+      pose('run', vx < 0);
+      clearTimeout(poseTimer);
+      poseTimer = setTimeout(function () { if (!kicking) pose(null); }, 220);
+    }
     bpos.x = Math.max(-60, Math.min(1860, drag.x + dx)); bpos.y = Math.max(-80, Math.min(1000, drag.y + dy)); placeBuddy();
+    if (bpos.x > 1780 && !zoomEl._slip) { try { buddy.releasePointerCapture(e.pointerId); } catch (err) {} pageTurn(); return; }
     var t = hitAt(e.clientX, e.clientY);
     if (t !== lastHit) {
       glow(lastHit, false); lastHit = t;
-      if (t && activate(t, true)) { glow(t, true); buddy.classList.remove('hit'); void buddy.offsetWidth; buddy.classList.add('hit'); }
+      lastReveal = null;
+      if (t && activate(t, true)) {
+        glow(t, true);
+        if (lastReveal && lastReveal.classList.contains('mfront') && lastReveal.classList.contains('b')) kick();
+        else { buddy.classList.remove('hit'); void buddy.offsetWidth; buddy.classList.add('hit'); }
+      }
     }
   });
   function endDrag(e) {
@@ -2539,6 +2684,7 @@ section.lift { background: #EFF2F4; }
     var moved = drag.moved; drag = null;
     glow(lastHit, false); lastHit = null;
     buddy.classList.remove('drag', 'hit');
+    if (!kicking) { clearTimeout(poseTimer); pose(null); }
     if (!moved) { buddy.classList.remove('hop'); void buddy.offsetWidth; buddy.classList.add('hop'); return; }
     buddy.classList.add('home'); bpos = { x: HOME.x, y: HOME.y }; placeBuddy();
   }
@@ -2637,6 +2783,9 @@ section.lift { background: #EFF2F4; }
   DECK.fillResults = function (text) { resIn.value = text; renderResults(); };
   DECK.scale = function () { return scale; };
   DECK.pick = pick;
+  DECK.decideMajority = function () { if (tally.boss === tally.joe) decide('skip'); else decideMajority(); };
+  DECK.zoomCount = function (t) { zoomEl.querySelector('.zcount').textContent = t; };
+  DECK.zoomSlip = function () { return zoomEl._slip; };
   DECK.zoomHint = function (t) { zoomEl.querySelector('.zhint').textContent = t; };
   DECK.rateOf = rateOf;
   DECK.bossSays = bossSays;
@@ -2692,7 +2841,7 @@ section.lift { background: #EFF2F4; }
   function publishState() {
     var cs = D.current();
     var st = { phase: started ? 'live' : 'lobby', count: count(), t: Date.now(), slide: cs ? cs.id : '', q: null };
-    if (q) st.q = { id: q.id, kind: q.kind, prompt: q.prompt, options: q.options, status: q.status, correct: q.status === 'closed' ? q.correct : null, majority: q.status === 'closed' ? q.majority : null };
+    if (q) st.q = { id: q.id, kind: q.kind, prompt: q.prompt, options: q.options, status: q.status, left: leftMs(), correct: q.status === 'closed' ? q.correct : null, majority: q.status === 'closed' ? q.majority : null };
     var msg = JSON.stringify(st);
     liveClients().forEach(function (c) { c.publish(P + room + '/state', msg, { qos: 1, retain: true }); });
   }
@@ -2763,11 +2912,34 @@ section.lift { background: #EFF2F4; }
     Object.keys(keys).forEach(function (id) { var v = (votes[id] || {})[p]; if (v) { n++; if (v === keys[id]) ok++; } });
     return { n: n, ok: ok };
   }
-  function openQ(nq) { q = nq; q.status = 'open'; publishState(); refreshQ(); }
+  // every question runs on a 10-second clock; at zero it closes by itself
+  var QSECS = 10, ticker = null;
+  function leftMs() { return q && q.status === 'open' && q.deadline ? Math.max(0, q.deadline - Date.now()) : 0; }
+  function openQ(nq) {
+    q = nq; q.status = 'open'; q.deadline = Date.now() + QSECS * 1000;
+    if (q.kind === 'elev') { var sec = document.getElementById(q.id), el = sec && sec.querySelector('.epanel .sec'); q.secEl = el; q.secBase = el ? (parseInt(el.textContent.replace(/\D/g, ''), 10) || QSECS) : QSECS; q.secText = el ? el.textContent : ''; }
+    publishState(); refreshQ(); tick();
+    clearInterval(ticker); ticker = setInterval(tick, 250);
+  }
+  function tick() {
+    if (!q || q.status !== 'open') { clearInterval(ticker); return; }
+    var left = Math.ceil(leftMs() / 1000);
+    var pc = poll.querySelector('.pcount'); if (pc) pc.textContent = left;
+    if (q.kind === 'tac') D.zoomCount('⏱ 剩 ' + left + ' 秒');
+    if (q.kind === 'elev' && q.secEl) q.secEl.textContent = '剩 ' + Math.max(0, q.secBase - QSECS + left) + ' 秒';
+    if (left <= 0) {
+      clearInterval(ticker);
+      if (q.kind === 'tac') { if (D.zoomSlip()) D.decideMajority(); else closeQ(); }
+      else finishQ();
+    }
+  }
   function closeQ() {
     if (!q || q.status !== 'open') return;
+    if (q.secEl) { var keep = q.secEl, txt = q.secText; setTimeout(function () { keep.textContent = txt; }, 4000); }
     q.majority = majority(q.id, q.options); q.status = 'closed';
     if (q.correct) { keys[q.id] = q.correct; save(); }
+    clearInterval(ticker);
+    if (q.kind === 'tac') D.zoomCount('');
     publishState(); refreshQ(); render();
   }
   function labelOf(k) { var o = q.options.filter(function (x) { return x.k === k; })[0]; return o ? o.l : k; }
@@ -2777,14 +2949,14 @@ section.lift { background: #EFF2F4; }
     var c = counts(q.id);
     if (q.kind === 'tac') { D.setTally(c.boss || 0, c.joe || 0); return; }
     var max = 1; q.options.forEach(function (o) { max = Math.max(max, c[o.k] || 0); });
-    var h = '<p class="pk">' + (q.kind === 'elev' ? '電梯簡報｜全班投票' : '管道排名｜全班投票') + '</p><p class="pq">' + esc(q.prompt) + '</p>';
+    var h = '<p class="pk">' + (q.kind === 'elev' ? '電梯簡報｜全班投票' : '管道排名｜全班投票') + '</p>' + (q.status === 'open' ? '<p class="pcount">' + Math.ceil(leftMs() / 1000) + '</p>' : '') + '<p class="pq">' + esc(q.prompt) + '</p>';
     q.options.forEach(function (o) {
       var x = c[o.k] || 0, cls = q.status === 'closed' ? (q.correct && o.k === q.correct ? ' ok' : (o.k === q.majority ? ' maj' : '')) : '';
       h += '<div class="prow' + cls + '"><span class="pl">' + esc(o.l) + '</span><span class="pn">' + x + '</span><span class="pt"><i style="width:' + Math.round(x / max * 100) + '%"></i></span></div>';
     });
     h += '<div class="pfoot"><span>已作答 ' + answered(q.id) + ' / ' + count() + '</span>';
     if (q.status === 'closed') h += '<span class="pdone">' + (q.majority ? '多數選：' + esc(labelOf(q.majority)) : '沒有多數') + '</span>';
-    h += '<div class="pbtns">' + (q.status === 'open' ? '<button type="button" class="primary" data-p="close">' + (q.kind === 'elev' ? '截止（不公布對錯）' : '截止並對答案') + '</button>' : '') + '<button type="button" data-p="hide">收起</button></div></div>';
+    h += '<div class="pbtns">' + (q.status === 'open' ? '<button type="button" class="primary" data-p="close">' + '截止' + '</button>' : '') + '<button type="button" data-p="hide">收起</button></div></div>';
     poll.innerHTML = h;
     if (poll.hidden) { poll.hidden = false; D.setSide(true); }
   }
@@ -2792,7 +2964,7 @@ section.lift { background: #EFF2F4; }
     var kind = q && q.kind;
     closeQ();
     if (kind === 'elev') markMajor();
-    else if (kind === 'media' && pendingChip) { D.revealEl(pendingChip); pendingChip = null; }
+    else if (kind === 'media' && pendingChip) { D.revealEl(pendingChip); pendingChip = null; setTimeout(nextChip, 2200); }
   }
   poll.addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return;
@@ -2808,9 +2980,17 @@ section.lift { background: #EFF2F4; }
   }
   function markMajor() { if (q && q.kind === 'elev' && q.majority) { var sec = document.getElementById(q.id); if (sec) D.pick(sec, q.majority, counts(q.id)[q.majority] || 0); } }
 
+  var INTERACTIVE = /^(elev[123]|media|tactics)$/;
+  function nextChip() {
+    var sec = D.current(); if (!sec || sec.id !== 'media' || !started || !connected) return;
+    var chip = Array.prototype.filter.call(sec.querySelectorAll('.fly.fragment, .vfly.fragment'), function (c) { return !c.classList.contains('visible'); })[0];
+    if (chip) D.onChip(chip);
+  }
   D.onEnter = function (sec) {
     if (q && q.status === 'open') { closeQ(); markMajor(); }
-    q = null; pendingChip = null; hidePoll();
+    q = null; pendingChip = null; hidePoll(); clearInterval(ticker);
+    if (!started && connected && count() > 0 && INTERACTIVE.test(sec.id)) { started = true; save(); render(); }
+    if (started && sec.id === 'media') setTimeout(nextChip, 900);
     if (started && /^elev[123]$/.test(sec.id)) openQ(elevQ(sec)); else publishState();
     if (sec.id === 'elevend') D.fillResults(resultsText());
     if (sec.id === 'elevator') openLobby();
