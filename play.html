@@ -61,7 +61,8 @@ input { font: inherit; font-size: 18px; padding: 12px 14px; border-radius: 12px;
 <div class="top"><span class="pill" id="conn"><i></i><span id="connTxt">連線中…</span></span><span id="who"></span></div>
 <div id="app"></div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js"></script>
+<script src="vendor/mqtt.min.js"></script>
+<script>window.mqtt || document.write('<script src="https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js"><\/script>')</script>
 <script>
 (function () {
   var BROKERS = ['wss://broker.emqx.io:8084/mqtt', 'wss://broker.hivemq.com:8884/mqtt', 'wss://test.mosquitto.org:8081/mqtt'];
@@ -89,7 +90,7 @@ input { font: inherit; font-size: 18px; padding: 12px 14px; border-radius: 12px;
   var me = lsGet('comm8me_' + room) || {};
   me.name = me.name || ''; me.joined = !!me.joined; me.votes = me.votes || {}; me.results = me.results || {}; me.endSeen = !!me.endSeen;
   function save() { lsSet('comm8me_' + room, me); }
-  var st = null, connected = false, client = null, tries = 0;
+  var st = null, connected = false, client = null, tries = 0, timer = null, everUp = false;
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
   function setConn() {
@@ -97,11 +98,26 @@ input { font: inherit; font-size: 18px; padding: 12px 14px; border-radius: 12px;
     document.getElementById('connTxt').textContent = connected ? '已連線｜房間 ' + room : '連線中…';
     document.getElementById('who').textContent = me.joined ? me.name : '';
   }
+  // try one broker; if it does not answer within a few seconds, move on to the next one
   function connect() {
-    client = mqtt.connect(BROKERS[bi], { clientId: 'p_' + pid + '_' + Math.random().toString(16).slice(2, 6), clean: true, reconnectPeriod: 2000, connectTimeout: 8000, keepalive: 30 });
-    client.on('connect', function () { connected = true; tries = 0; client.subscribe(P + room + '/state', { qos: 1 }); if (me.joined) join(); setConn(); draw(); });
-    client.on('close', function () { connected = false; tries++; setConn(); draw(); });
-    client.on('message', function (t, m) {
+    if (client) { try { client.end(true); } catch (e) {} }
+    var mine = mqtt.connect(BROKERS[bi], { clientId: 'p_' + pid + '_' + Math.random().toString(16).slice(2, 6), clean: true, reconnectPeriod: 0, connectTimeout: 6000, keepalive: 30 });
+    client = mine; everUp = false;
+    clearTimeout(timer);
+    timer = setTimeout(function () { if (client === mine && !connected) { bi = (bi + 1) % BROKERS.length; tries++; connect(); } }, 7000);
+    mine.on('connect', function () {
+      if (client !== mine) return;
+      clearTimeout(timer); connected = true; everUp = true; tries = 0;
+      mine.subscribe(P + room + '/state', { qos: 1 }); if (me.joined) join(); setConn(); draw();
+    });
+    mine.on('close', function () {
+      if (client !== mine) return;
+      var was = connected; connected = false; setConn(); draw();
+      clearTimeout(timer);
+      timer = setTimeout(function () { if (client === mine) { if (!was) bi = (bi + 1) % BROKERS.length; tries++; connect(); } }, was ? 800 : 300);
+    });
+    mine.on('error', function () {});
+    mine.on('message', function (t, m) {
       var s = m.toString(); if (!s) { st = { phase: 'gone' }; draw(); return; }
       try { st = JSON.parse(s); } catch (e) { return; }
       var q = st.q;
@@ -110,13 +126,14 @@ input { font: inherit; font-size: 18px; padding: 12px 14px; border-radius: 12px;
       draw();
     });
   }
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && !connected && room && typeof mqtt !== 'undefined') connect(); });
   function join() { client.publish(P + room + '/join', JSON.stringify({ pid: pid, name: me.name }), { qos: 1 }); }
   function vote(qid, c) { me.votes[qid] = c; save(); client.publish(P + room + '/vote', JSON.stringify({ pid: pid, name: me.name, qid: qid, c: c }), { qos: 1 }); draw(); }
 
   function card(inner, cls) { return '<div class="card' + (cls ? ' ' + cls : '') + '">' + inner + '</div>'; }
   function draw() {
     if (!room) { app.innerHTML = card('<h1>請掃大螢幕上的 QR code</h1><p class="muted">這個網址少了房間代碼。</p>'); return; }
-    if (!connected) { app.innerHTML = card('<h1>連線中…</h1><p class="muted">' + (tries > 2 ? '連不上的話，請關掉 Wi-Fi 改用行動網路，再重新整理這一頁。' : '請稍等幾秒。') + '</p>'); return; }
+    if (!connected) { app.innerHTML = card('<h1>連線中…</h1><p class="muted">' + (tries > 3 ? '還在換伺服器重試……如果一直連不上，請關掉 Wi-Fi 改用行動網路。' : '請稍等幾秒，會自動找可以用的伺服器。') + '</p>'); return; }
     if (!me.joined) {
       app.innerHTML = card('<h1>加入現場遊戲</h1><label for="nm">你的名字或暱稱</label><input id="nm" maxlength="20" autocomplete="nickname" placeholder="例如：小明"><button class="btn" id="go" type="button">加入</button>');
       var nm = document.getElementById('nm'); nm.value = me.name || '';
