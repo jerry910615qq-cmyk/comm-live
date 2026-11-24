@@ -26,7 +26,7 @@
 [hidden] { display: none !important; }
 html, body { height: 100%; }
 body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); overflow: hidden; }
-#viewport { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+#viewport { position: fixed; top: 0; left: 0; right: 0; bottom: calc(40px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; justify-content: center; }
 #deck { position: relative; width: 1920px; height: 1080px; flex: none; transform-origin: center center; box-shadow: 0 10px 40px rgba(20, 28, 36, 0.18); overflow: hidden; }
 #deck > section { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
 #deck > section:not(.active) { display: none; }
@@ -56,14 +56,15 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); overflo
 #zoom .acts { grid-column: 1 / -1; display: flex; gap: 16px; justify-content: flex-end; }
 #zoom .acts .go { background: #4F7189; color: #FBF8F3; border-color: #4F7189; }
 #zoom button:focus-visible { outline: 4px solid #4F7189; outline-offset: 2px; }
-#bar { position: fixed; left: 50%; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; gap: 6px; align-items: center; padding: 6px; border-radius: 14px; background: var(--btn-bg); border: 1px solid var(--btn-line); opacity: 0.35; transition: opacity 0.2s ease; z-index: 30; font: 500 14px 'Noto Sans TC', system-ui, sans-serif; max-width: calc(100vw - 32px); flex-wrap: wrap; justify-content: center; }
+#bar { position: fixed; left: 50%; bottom: calc(3px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; gap: 2px; align-items: center; padding: 1px 4px; border-radius: 10px; background: var(--btn-bg); border: 1px solid var(--btn-line); opacity: 0.55; transition: opacity 0.2s ease; z-index: 30; font: 500 13px 'Noto Sans TC', system-ui, sans-serif; max-width: calc(100vw - 16px); flex-wrap: nowrap; white-space: nowrap; justify-content: center; height: 32px; box-sizing: border-box; }
 #bar:hover, #bar:focus-within { opacity: 1; }
-#bar button { font: inherit; color: var(--btn-fg); background: transparent; border: 0; border-radius: 9px; padding: 8px 12px; cursor: pointer; min-width: 40px; }
+#bar button { font: inherit; color: var(--btn-fg); background: transparent; border: 0; border-radius: 7px; padding: 3px 8px; cursor: pointer; min-width: 30px; line-height: 1.4; }
+#count { padding: 0 4px; font-variant-numeric: tabular-nums; }
 #bar button:hover { background: var(--chrome-bg); }
 #bar button:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
 #count { color: var(--btn-fg); font-variant-numeric: tabular-nums; padding: 0 6px; min-width: 64px; text-align: center; }
 .shell-panel { position: fixed; z-index: 40; background: var(--panel-bg); color: var(--chrome-fg); border: 1px solid var(--btn-line); border-radius: 16px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2); font: 400 16px/1.6 'Noto Sans TC', system-ui, sans-serif; }
-#notes { left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(70px + env(safe-area-inset-bottom, 0px)); max-width: 900px; margin: 0 auto; padding: 16px 20px; max-height: 30vh; overflow: auto; }
+#notes { left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(46px + env(safe-area-inset-bottom, 0px)); max-width: 900px; margin: 0 auto; padding: 16px 20px; max-height: 30vh; overflow: auto; }
 #qr, #results { left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 22px; display: flex; flex-direction: column; gap: 12px; max-height: calc(100vh - 40px); overflow: auto; box-sizing: border-box; }
 #qr { width: min(92vw, 460px); }
 #results { width: min(94vw, 760px); }
@@ -90,7 +91,7 @@ body { margin: 0; background: var(--chrome-bg); color: var(--chrome-fg); overflo
 body.side #viewport { right: 372px; }
 /* progress bar you can drag */
 #scrubWrap { position: relative; display: flex; align-items: center; padding: 0 6px; }
-#scrub { width: min(34vw, 420px); min-width: 140px; accent-color: #4F7189; cursor: pointer; height: 28px; margin: 0; }
+#scrub { width: min(28vw, 340px); min-width: 100px; accent-color: #4F7189; cursor: pointer; height: 22px; margin: 0; }
 #scrub:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 #scrubTip { position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%); white-space: nowrap; max-width: 70vw; overflow: hidden; text-overflow: ellipsis; background: var(--btn-bg); color: var(--btn-fg); border: 1px solid var(--btn-line); border-radius: 10px; padding: 6px 12px; font-size: 15px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15); pointer-events: none; }
 #bar.scrubbing { opacity: 1; }
@@ -1161,7 +1162,7 @@ section.pledge { background: #FDFCFA; }
 .lobnames span { background: var(--chrome-bg); border-radius: 999px; padding: 4px 12px; font-size: 14px; }
 .lobstatus { margin: 0; font-size: 14px; }
 .shell-panel button.primary { background: #4F7189; color: #FBF8F3; border-color: #4F7189; font-weight: 700; }
-#poll { position: fixed; right: max(12px, env(safe-area-inset-right, 0px)); top: calc(60px + env(safe-area-inset-top, 0px)); bottom: calc(70px + env(safe-area-inset-bottom, 0px)); width: 348px; z-index: 34; background: #FDFCFA; border: 2px solid #4F7189; border-radius: 18px; padding: 18px; box-sizing: border-box; box-shadow: 0 12px 30px rgba(20, 28, 36, 0.2); font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif; color: #3B4350; display: flex; flex-direction: column; gap: 10px; overflow: auto; }
+#poll { position: fixed; right: max(12px, env(safe-area-inset-right, 0px)); top: calc(60px + env(safe-area-inset-top, 0px)); bottom: calc(46px + env(safe-area-inset-bottom, 0px)); width: 348px; z-index: 34; background: #FDFCFA; border: 2px solid #4F7189; border-radius: 18px; padding: 18px; box-sizing: border-box; box-shadow: 0 12px 30px rgba(20, 28, 36, 0.2); font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif; color: #3B4350; display: flex; flex-direction: column; gap: 10px; overflow: auto; }
 #poll .pk { margin: 0; font-size: 13px; font-weight: 700; color: #4F7189; letter-spacing: 1px; }
 #poll .pcount { margin: 0; align-self: flex-end; width: 64px; height: 64px; border-radius: 50%; background: #9C5D3B; color: #FBF8F3; font: 700 34px/64px 'Space Grotesk', sans-serif; text-align: center; }
 #poll .pq { margin: 0; font-size: 18px; font-weight: 700; line-height: 1.45; }
@@ -2524,9 +2525,9 @@ section.pledge { background: #FDFCFA; }
 <span id="count">1 / 1</span>
 <button id="nextBtn" type="button" aria-label="下一步">→</button>
 <button id="notesBtn" type="button">講稿</button>
-<button id="liveBtn" type="button">現場互動</button><button id="qrBtn" type="button" hidden>QR code</button>
+<button id="liveBtn" type="button" title="現場互動">互動</button><button id="qrBtn" type="button" hidden>QR code</button>
 <button id="resBtn" type="button" hidden>說服率</button>
-<button id="fsBtn" type="button">全螢幕</button>
+<button id="fsBtn" type="button" aria-label="全螢幕" title="全螢幕">⛶</button>
 </nav>
 
 <div id="liveBadge" class="off" role="button" tabindex="0" aria-label="打開現場互動"><span class="dot"></span><span id="lbTxt">連線中…</span></div>
@@ -2569,7 +2570,7 @@ section.pledge { background: #FDFCFA; }
   function bossSays(r) { return r >= 90 ? '「好，下週就開始試辦。」' : r >= 65 ? '「有點意思，把數字整理好再來找我。」' : '「我再想想。」（電梯門開了）'; }
 
   function fit() {
-    var w = vpEl.clientWidth - 24, h = vpEl.clientHeight - 24;
+    var w = vpEl.clientWidth - 16, h = vpEl.clientHeight - 8;
     scale = Math.max(0.1, Math.min(w / 1920, h / 1080));
     deckEl.style.transform = 'scale(' + scale + ')';
   }
