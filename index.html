@@ -1140,6 +1140,7 @@ section.pledge { background: #FDFCFA; }
 .nquote { background: var(--orange-l); border-radius: 20px; padding: 26px 32px; display: flex; flex-direction: column; gap: 6px; }
 .nquote .t { font-size: 40px; font-weight: 700; color: #7A4428; margin: 0; }
 .nquote .m { font-size: 28px; color: #7A4428; margin: 0; text-align: right; }
+.epanel .floor.w3 { font-size: 104px; letter-spacing: -2px; white-space: nowrap; }
 
 
 #liveBadge { position: fixed; top: calc(10px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); z-index: 35; display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--btn-bg); color: var(--btn-fg); border: 1px solid var(--btn-line); font: 500 14px 'Noto Sans TC', system-ui, sans-serif; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12); }
@@ -1314,9 +1315,9 @@ section.pledge { background: #FDFCFA; }
 
 <section id="elevator" class="lift">
 <h2>電梯簡報</h2>
-<p class="elead">30 秒、從 1 樓到 50 樓：你能說服主管買下這支筆嗎？</p>
+<p class="elead">39 秒、從 1 樓到 101 樓：你能說服主管買下這支筆嗎？</p>
 <img class="ecover rise" src="img/da2ee5b8dee2977183949a3a05e21ef5.jpeg" alt="多位科技公司執行長與政治人物在白宮會議桌前的合照">
-<aside>電梯簡報遊戲開場。請大家掃 QR code 進入遊戲，一起闖三關：1 樓、18 樓、35 樓各一題，到 50 樓只有 30 秒。每一關三個選項看起來都合理，沒有絕對的對錯；最後到 50 樓，系統會依照你的選擇算出「說服主管的機率」。</aside>
+<aside>電梯簡報遊戲開場。請大家掃 QR code 進入遊戲，一起闖三關：1 樓、34 樓、68 樓各一題。課本的微溝通專欄說，搭電梯從 1 樓直達 101 頂樓只要 39 秒，所以每一關剛好 13 秒，到 101 樓時間就用完了。三關分別對應微溝通的三個優點：鎖定要點、確認對方理解、讓對方記得。每一關三個選項看起來都合理，沒有絕對的對錯；最後到 101 樓，系統會依照你的選擇算出「說服主管的機率」。</aside>
 </section>
 
 <section id="elev1" class="lift">
@@ -1325,8 +1326,8 @@ section.pledge { background: #FDFCFA; }
 <div class="epanel rise" style="--i:0">
 <p class="lab">電梯樓層</p>
 <p class="floor">1F</p>
-<p class="sec">剩 30 秒</p>
-<p class="goal">這一關目標：<br>17 秒內<br>講出重點</p>
+<p class="sec">剩 39 秒</p>
+<p class="goal">微溝通 ①<br>鎖定<br>對話要點</p>
 </div>
 <div class="eright">
 <div class="eboss rise" style="--i:1">
@@ -1366,17 +1367,17 @@ section.pledge { background: #FDFCFA; }
 </div>
 </div>
 </div>
-<aside>第一關：主管只給你幾秒。三個開場都有禮貌，差在第一句有沒有把提案連到主管在乎的目標。每題 10 秒，時間到自動截止，不公布對錯，最後在 50 樓一起算說服率。</aside>
+<aside>第一關：主管只給你幾秒。三個開場都有禮貌，差在第一句有沒有把提案連到主管在乎的目標。對應微溝通第一個優點「明確鎖定對話的要點」：B 一句話就講到主管在乎的時間成本。每題 13 秒，時間到自動截止，不公布對錯，最後在 101 樓一起算說服率。</aside>
 </section>
 
 <section id="elev2" class="lift">
-<h2>第 2 關｜主管有興趣了</h2>
+<h2>第 2 關｜主管聽懂了嗎？</h2>
 <div class="egame">
 <div class="epanel rise" style="--i:0">
 <p class="lab">電梯樓層</p>
-<p class="floor">18F</p>
-<p class="sec">剩 20 秒</p>
-<p class="goal">這一關目標：<br>說出為什麼<br>是現在</p>
+<p class="floor">34F</p>
+<p class="sec">剩 26 秒</p>
+<p class="goal">微溝通 ②<br>確認對方<br>是否理解</p>
 </div>
 <div class="eright">
 <div class="eboss rise" style="--i:1">
@@ -1398,35 +1399,35 @@ section.pledge { background: #FDFCFA; }
 <path d="M58 70 Q65 73 72 70" fill="none" stroke="#3B4350" stroke-width="3" stroke-linecap="round"/>
 </g>
 </svg>
-<div class="esay"><p class="w">主管</p><p class="t">「聽起來不錯，但為什麼要現在做？」</p></div>
+<div class="esay"><p class="w">主管</p><p class="t">「喔……所以你是要幫業務部換一批新筆？」</p></div>
 </div>
 <div class="eopts rise" style="--i:2">
 <div class="opt" data-k="A">
 <p class="l">A</p>
-<p class="t">「您這季的目標是縮短簽約時間；現在一份合約平均卡 3 天，晚一季導入就多卡一季。」</p>
+<p class="t">「不只是換筆，重點是每月省下 20 小時的紙本作業，正好對上您這季縮短簽約時間的目標。這樣說清楚嗎？」</p>
 </div>
 <div class="opt" data-k="B">
 <p class="l">B</p>
-<p class="t">「這件事真的很急，您今天一定要點頭，不然就來不及了。」</p>
+<p class="t">「對對對，就是換筆，很便宜的。」</p>
 </div>
 <div class="opt" data-k="C">
 <p class="l">C</p>
-<p class="t">「主管您眼光最好了，一定一眼就看得出這支筆的價值。」</p>
+<p class="t">「我等一下寄 20 頁的規格書給您，您看完就懂了。」</p>
 </div>
 </div>
 </div>
 </div>
-<aside>第二關：主管問「為什麼是現在」。A 是用數據講道理（理性說服），B 是施壓，C 是奉承。每題 10 秒，最後在 50 樓一起算說服率。</aside>
+<aside>第二關對應微溝通第二個優點「確認對方是否理解」。主管把提案聽成「換一批筆」，其實是誤會了。A 先更正重點，再問一句「這樣說清楚嗎」確認主管聽懂；B 順著誤會講，主管就只記得「買筆」；C 丟 20 頁規格書，是課本說的資訊超載。每題 13 秒，最後在 101 樓一起算說服率。</aside>
 </section>
 
 <section id="elev3" class="lift">
-<h2>第 3 關｜最後一個問題</h2>
+<h2>第 3 關｜電梯快到了</h2>
 <div class="egame">
 <div class="epanel rise" style="--i:0">
 <p class="lab">電梯樓層</p>
-<p class="floor">35F</p>
-<p class="sec">剩 10 秒</p>
-<p class="goal">這一關目標：<br>讓對方<br>敢點頭</p>
+<p class="floor">68F</p>
+<p class="sec">剩 13 秒</p>
+<p class="goal">微溝通 ③<br>保證對方<br>一定記得</p>
 </div>
 <div class="eright">
 <div class="eboss rise" style="--i:1">
@@ -1448,40 +1449,40 @@ section.pledge { background: #FDFCFA; }
 <path d="M58 70 Q65 73 72 70" fill="none" stroke="#3B4350" stroke-width="3" stroke-linecap="round"/>
 </g>
 </svg>
-<div class="esay"><p class="w">主管</p><p class="t">「要花多少錢？出問題怎麼辦？」</p></div>
+<div class="esay"><p class="w">主管</p><p class="t">「我等一下還有會，你最後要我記住什麼？」</p></div>
 </div>
 <div class="eopts rise" style="--i:2">
 <div class="opt" data-k="A">
 <p class="l">A</p>
-<p class="t">「一支 3,000 元、全部門 20 支，我算過一年就能回本，我保證不會出問題。」</p>
+<p class="t">「重點有五個：價格、功能、保固、廠商評價、導入流程，我很快說一下……」</p>
 </div>
 <div class="opt" data-k="B">
 <p class="l">B</p>
-<p class="t">「價格我還在跟廠商談，確定後再整理一份完整報告給您。」</p>
+<p class="t">「沒關係，我整理一份完整報告放您桌上。」</p>
 </div>
 <div class="opt" data-k="C">
 <p class="l">C</p>
-<p class="t">「先買 5 支給一組試用一個月，約 1.5 萬元；有數據證明省時再擴大。您覺得哪一組先試？」</p>
+<p class="t">「一句話：1.5 萬、試辦一個月，省下 20 小時。您覺得哪一組先試？」</p>
 </div>
 </div>
 </div>
 </div>
-<aside>第三關：主管問成本和風險。A 有算錢但把話說死，B 還沒準備好，C 先講成本、用小規模試辦降低風險，最後請主管一起決定。每題 10 秒，選完就到 50 樓算說服率。</aside>
+<aside>第三關對應微溝通第三個優點「保證對方一定記得」。A 一口氣塞五個重點，主管走出電梯一個也記不住；B 沒有留下任何重點；C 用一句話、三個數字收尾，再請主管決定下一步，最容易被記住。每題 13 秒，選完就到 101 樓算說服率。</aside>
 </section>
 
 <section id="elevend" class="lift">
-<h2>50F 叮！你說服主管了嗎？</h2>
+<h2>101F 叮！你說服主管了嗎？</h2>
 <div class="eend">
 <div class="epanel rise" style="--i:0">
 <p class="lab">電梯樓層</p>
-<p class="floor">50F</p>
-<p class="sec">30 秒用完</p>
+<p class="floor w3">101F</p>
+<p class="sec">39 秒用完</p>
 <p class="goal">說服率<br>＝三關加總</p>
 </div>
 <div class="epath">
-<div class="escore rise" style="--i:1"><p class="r">第 1 關</p><p class="s">A <b>18</b></p><p class="s best">B <b>34</b></p><p class="s">C <b>10</b></p><p class="c">把提案連到主管的目標</p></div>
-<div class="escore rise" style="--i:2"><p class="r">第 2 關</p><p class="s best">A <b>33</b></p><p class="s">B <b>8</b></p><p class="s">C <b>14</b></p><p class="c">講道理，勝過施壓、奉承</p></div>
-<div class="escore rise" style="--i:3"><p class="r">第 3 關</p><p class="s">A <b>22</b></p><p class="s">B <b>8</b></p><p class="s best">C <b>33</b></p><p class="c">小規模試辦＋請主管參與</p></div>
+<div class="escore rise" style="--i:1"><p class="r">第 1 關</p><p class="s">A <b>18</b></p><p class="s best">B <b>34</b></p><p class="s">C <b>10</b></p><p class="c">① 鎖定要點</p></div>
+<div class="escore rise" style="--i:2"><p class="r">第 2 關</p><p class="s best">A <b>33</b></p><p class="s">B <b>8</b></p><p class="s">C <b>14</b></p><p class="c">② 確認對方理解</p></div>
+<div class="escore rise" style="--i:3"><p class="r">第 3 關</p><p class="s">A <b>22</b></p><p class="s">B <b>8</b></p><p class="s best">C <b>33</b></p><p class="c">③ 讓對方記得</p></div>
 <div class="etier rise" style="--i:4">
 <p class="k">90–100%</p><p class="v">「好，下週就開始試辦。」</p>
 <p class="k">65–89%</p><p class="v">「有點意思，把數字整理好再來找我。」</p>
@@ -1489,7 +1490,7 @@ section.pledge { background: #FDFCFA; }
 </div>
 </div>
 </div>
-<aside>公布計分方式：每一關的選項都有分數，三關加起來就是你說服主管的機率，滿分 100%（B → A → C）。分數不是我們自己訂的，而是對照兩篇組織行為的經典研究。第一，Yukl 與 Tracey（1992，Journal of Applied Psychology）調查人們對上司、同事、部屬用的九種影響策略，發現「理性說服」是對上司最常用、也最有效的策略之一，「施壓」效果最差，「奉承」和「交換條件」對上司則沒有效果，所以第 2 關 A 最高、施壓最低。第二，Dutton 等人（2001，Academy of Management Journal）研究員工怎麼向高層「推銷議題」，發現成功的人會把議題包裝成跟組織目標有關的商業理由，並且邀請相關的人一起參與，所以第 1 關先講主管目標的 B、第 3 關小規模試辦又請主管一起決定的 C 分數最高。其他選項不是錯，只是比較難讓主管當場點頭。</aside>
+<aside>公布計分方式：每一關的選項都有分數，三關加起來就是你說服主管的機率，滿分 100%（B → A → C）。三關對照課本 OB 專欄「微溝通」的三個優點：第 1 關看你能不能一開口就鎖定要點，B 直接講主管在乎的時間成本；第 2 關看你會不會確認對方聽懂，A 更正誤會再確認，C 的 20 頁規格書則是資訊超載；第 3 關看你能不能讓對方記得，C 用一句話、三個數字收尾。另外，Dutton 等人（2001，Academy of Management Journal）研究員工怎麼向高層推銷議題，發現成功的人會把議題連到組織目標，並邀請對方一起參與，這也是第 1 關 B、第 3 關 C 分數最高的原因。其他選項不是錯，只是比較難讓主管當場點頭。</aside>
 </section>
 
 <section id="model" class="alt">
@@ -3155,8 +3156,8 @@ section.pledge { background: #FDFCFA; }
   var QSECS = 10, ticker = null;
   function leftMs() { return q && q.status === 'open' && q.deadline ? Math.max(0, q.deadline - Date.now()) : 0; }
   function openQ(nq) {
-    q = nq; q.status = 'open'; q.deadline = Date.now() + QSECS * 1000;
-    if (q.kind === 'elev') { var sec = document.getElementById(q.id), el = sec && sec.querySelector('.epanel .sec'); q.secEl = el; q.secBase = el ? (parseInt(el.textContent.replace(/\D/g, ''), 10) || QSECS) : QSECS; q.secText = el ? el.textContent : ''; }
+    q = nq; q.status = 'open'; q.secs = q.kind === 'elev' ? 13 : QSECS; q.deadline = Date.now() + q.secs * 1000;
+    if (q.kind === 'elev') { var sec = document.getElementById(q.id), el = sec && sec.querySelector('.epanel .sec'); q.secEl = el; q.secBase = el ? (parseInt(el.textContent.replace(/\D/g, ''), 10) || q.secs) : q.secs; q.secText = el ? el.textContent : ''; }
     publishState(); refreshQ(); tick();
     clearInterval(ticker); ticker = setInterval(tick, 250);
   }
@@ -3165,7 +3166,7 @@ section.pledge { background: #FDFCFA; }
     var left = Math.ceil(leftMs() / 1000);
     var pc = poll.querySelector('.pcount'); if (pc) pc.textContent = left;
     if (q.kind === 'tac') D.zoomCount('⏱ 剩 ' + left + ' 秒');
-    if (q.kind === 'elev' && q.secEl) q.secEl.textContent = '剩 ' + Math.max(0, q.secBase - QSECS + left) + ' 秒';
+    if (q.kind === 'elev' && q.secEl) q.secEl.textContent = '剩 ' + Math.max(0, q.secBase - q.secs + left) + ' 秒';
     if (left <= 0) {
       clearInterval(ticker);
       if (q.kind === 'tac') { if (D.zoomSlip()) D.decideMajority(); else closeQ(); }

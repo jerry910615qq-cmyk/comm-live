@@ -158,7 +158,7 @@ input { font: inherit; font-size: 18px; padding: 12px 14px; border-radius: 12px;
     });
     h += '</div>';
     if (q.status === 'open') h += '<p class="tleft">剩 <b id="tl">' + secsLeft(q) + '</b> 秒</p><p class="muted">' + (mine ? '已送出，截止前可以改選。' : '點一個選項作答。') + '</p>';
-    else if (isElev) h += '<p class="res lock">' + (mine ? '已鎖定你的回答：' + esc(mine) + '。說服率到 50 樓一起揭曉！' : '這一關你沒有作答。') + '</p>';
+    else if (isElev) h += '<p class="res lock">' + (mine ? '已鎖定你的回答：' + esc(mine) + '。說服率到 101 樓一起揭曉！' : '這一關你沒有作答。') + '</p>';
     else if (!mine) h += '<p class="res no">這題你沒有作答</p>';
     else h += mine === q.correct ? '<p class="res ok">✓ 答對了！</p>' : '<p class="res no">哦，這題你可能錯誤囉～</p>';
     app.innerHTML = card(h) + (q.status === 'closed' ? elevSummary() : '') + scoreCard();
