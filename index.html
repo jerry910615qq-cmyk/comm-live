@@ -1153,6 +1153,8 @@ section.pledge { background: #FDFCFA; }
 .cq.end { background: var(--dark); }
 .cq.end .k { color: var(--on-dark-m); }
 .cq.end .t { color: #F2C9AE; }
+.cq.fragment { opacity: 0; transform: translateY(18px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.cq.fragment.visible { opacity: 1; transform: translateY(0); }
 
 
 #liveBadge { position: fixed; top: calc(10px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); z-index: 35; display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--btn-bg); color: var(--btn-fg); border: 1px solid var(--btn-line); font: 500 14px 'Noto Sans TC', system-ui, sans-serif; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12); }
