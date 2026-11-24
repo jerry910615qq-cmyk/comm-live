@@ -1142,6 +1142,18 @@ section.pledge { background: #FDFCFA; }
 .nquote .m { font-size: 28px; color: #7A4428; margin: 0; text-align: right; }
 .epanel .floor.w3 { font-size: 104px; letter-spacing: -2px; white-space: nowrap; }
 
+/* ---------- video slide ---------- */
+.clipwrap { display: grid; grid-template-columns: 1216px 1fr; gap: 48px; align-items: center; margin-top: 8px; }
+.clipv { width: 1216px; height: 684px; border-radius: 24px; overflow: hidden; background: #1E242B; box-shadow: 0 10px 30px rgba(59, 67, 80, 0.2); }
+.clipv video { display: block; width: 100%; height: 100%; object-fit: contain; background: #1E242B; }
+.clipside { display: flex; flex-direction: column; gap: 24px; }
+.cq { background: var(--card, #FDFCFA); border-radius: 20px; padding: 24px 28px; }
+.cq .k { font-size: 26px; color: var(--muted); margin: 0 0 6px; }
+.cq .t { font-size: 38px; font-weight: 700; color: var(--ink); margin: 0; line-height: 1.35; }
+.cq.end { background: var(--dark); }
+.cq.end .k { color: var(--on-dark-m); }
+.cq.end .t { color: #F2C9AE; }
+
 
 #liveBadge { position: fixed; top: calc(10px + env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); z-index: 35; display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--btn-bg); color: var(--btn-fg); border: 1px solid var(--btn-line); font: 500 14px 'Noto Sans TC', system-ui, sans-serif; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12); }
 #liveBadge .dot { width: 10px; height: 10px; border-radius: 50%; background: #B9B4AC; }
@@ -1620,6 +1632,22 @@ section.pledge { background: #FDFCFA; }
 </div>
 </div>
 <aside>非正式溝通就是同事閒聊、小道消息，課本叫它葡萄藤。它有五個特性：機動、無壓力、禁不了、傳得快、多半面對面。好處是主管可以拿到正式管道以外的消息。</aside>
+</section>
+
+<section id="clip" class="alt">
+<p class="eyebrow">影片時間｜約 30 秒</p>
+<h2>你身邊有這種人嗎？</h2>
+<div class="clipwrap">
+<div class="clipv rise" style="--i:0">
+<video src="img/90e67198c2033e9b70cc062b3789ac84.mp4" poster="img/656b774aa85481c78e61809e1d7fa99b.jpg" controls playsinline preload="auto" aria-label="短片：吃飯時一人說菜有點鹹，對方卻一直把話聽歪"></video>
+</div>
+<div class="clipside">
+<div class="cq rise" style="--i:1"><p class="k">他說的是</p><p class="t">「菜有點鹹。」</p></div>
+<div class="cq rise" style="--i:2"><p class="k">對方聽成</p><p class="t">「你嫌我煮得不好。」</p></div>
+<div class="cq end fragment"><p class="k">問題出在</p><p class="t">對方從一開始<br>就沒打算聽</p></div>
+</div>
+</div>
+<aside>先看一段 30 秒的短片，主題是「你身邊有這種人嗎」。一個人只是說菜有點鹹，對方卻回「鹹一點總比沒菜好」「你不吃有的是人吃」，一直把話聽歪。最後一句點出：對方從一開始就沒打算聽你說什麼。（按一下出現結論。）這就是溝通裡接收者這一端出了問題：訊息講得再清楚，對方不願意聽、帶著防衛去解讀，溝通還是會失敗。看完可以問大家：你身邊有沒有這種人？你自己會不會也這樣？</aside>
 </section>
 
 <section id="ways">
@@ -2671,6 +2699,7 @@ section.pledge { background: #FDFCFA; }
   function entered() {
     var sec = slides[cur];
     stopPinball();
+    Array.prototype.forEach.call(document.querySelectorAll('section video'), function (v) { if (!sec.contains(v)) v.pause(); });
     if (sec.id === 'stage2') startPinball(sec);
     Array.prototype.forEach.call(sec.querySelectorAll('.opt'), function (o) { o.classList.toggle('picked', classPick[sec.id] === o.getAttribute('data-k')); });
     if (window.DECK && DECK.onEnter) DECK.onEnter(sec);
@@ -2814,7 +2843,7 @@ section.pledge { background: #FDFCFA; }
     return false;
   }
   deckEl.addEventListener('click', function (e) {
-    if (e.target.closest('#zoom, #buddy, #poll, .psign')) return;
+    if (e.target.closest('#zoom, #buddy, #poll, .psign, video')) return;
     var t = e.target.closest(TOUCH);
     if (t && activate(t, false)) return;
     next();
@@ -2953,6 +2982,7 @@ section.pledge { background: #FDFCFA; }
     var t = e.target;
     if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
     if (t && t.tagName === 'BUTTON' && (e.key === ' ' || e.key === 'Enter')) return;
+    if (t && t.closest && t.closest('video') && (e.key === ' ' || e.key === 'Enter')) return;
     if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); next(); }
     else if (e.key === 'ArrowLeft' || e.key === 'PageUp' || e.key === 'Backspace') { e.preventDefault(); prev(); }
     else if (e.key === 'Home') go(0, 1);
